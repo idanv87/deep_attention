@@ -20,7 +20,12 @@ import time
 from utils import count_trainable_params, extract_path_from_dir, save_uniqe, grf, bilinear_upsample,upsample, generate_random_matrix
 from constants import Constants
 # names=[(1,1), (1,0.9), (1,0.8), (1,0.7), (1,0.6), (1,0.5)]
-names=[(0,10,0, 10)]
+
+names=[]
+for k in range(1,4):
+    for l in range(1,4):
+        names.append( (0,int(Constants.n/k),0,int(Constants.n/k)) )
+        
 def generate_domains(i1,i2,j1,j2):
     d_ref=domain(np.linspace(0,1,Constants.n),np.linspace(0,1,Constants.n))
     x_ref=d_ref.x
@@ -44,6 +49,8 @@ def generate_data(names,  save_path, number_samples,Seed=None):
         d_ref=domain(np.linspace(0,1,Constants.n),np.linspace(0,1,Constants.n))
         f_ref=np.zeros(d_ref.nx*d_ref.ny)
         d=generate_domains(dom[0],dom[1], dom[2],dom[3])
+        mask = np.zeros((len(f_ref),len(f_ref)))
+        mask[:, d.non_valid_indices] = float('-inf')  
         
 
         for i in range(number_samples):
@@ -55,6 +62,9 @@ def generate_data(names,  save_path, number_samples,Seed=None):
             A,G=d.solver(f.reshape((d.nx,d.ny)))
             # A,G=d.solver(0*upsample(f[0],int(n/2)).reshape((n,n)),[ga,gb,gc,gd])
             u=scipy.sparse.linalg.spsolve(A, G)
+        
+            # mask = torch.ones_like(scores)
+            # mask[:, self.mask_indices, :] = float('-inf')
             for j in range(len(d.X)):
                 
              
@@ -64,6 +74,7 @@ def generate_data(names,  save_path, number_samples,Seed=None):
                     # torch.tensor(np.tile(f[:, np.newaxis], (1, 3)), dtype=torch.float32),
                     torch.tensor(f_ref, dtype=torch.float32),
                     torch.tensor(np.hstack((d_ref.X.reshape(-1, 1), d_ref.Y.reshape(-1, 1))), dtype=torch.float32),
+                    torch.tensor(mask, dtype=torch.float32)
                     # ,
                     ]
                 Y1=torch.tensor(u[j], dtype=torch.cfloat)
@@ -78,7 +89,7 @@ def generate_data(names,  save_path, number_samples,Seed=None):
 if __name__=='__main__':
     pass
 # if False: 400 is good for n=20
-    X,Y=generate_data(names, Constants.train_path, number_samples=1, Seed=None)
+    X,Y=generate_data(names, Constants.train_path, number_samples=300, Seed=None)
 
     X_test, Y_test=generate_data(names,Constants.test_path,number_samples=1, Seed=800)
 

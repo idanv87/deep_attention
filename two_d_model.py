@@ -77,26 +77,23 @@ class deeponet_f(nn.Module):
         n_layers = 4
         self.n = p
 
-        self.attention=SelfAttention(input_dim=f_shape, hidden_dim=1)
-        self.attention2=SelfAttention2(input_dim=f_shape, hidden_dim=1)
-        self.branch1=FullyConnectedLayer(f_shape,p)
+        self.attention1=SelfAttention(input_dims=[1,1,1], hidden_dim=1)
+        self.attention2=SelfAttention(input_dims=[2,2,2], hidden_dim=1)
         
+        self.branch1=FullyConnectedLayer(f_shape,p)
         self.branch2=FullyConnectedLayer(f_shape,p)
         self.trunk1=FullyConnectedLayer(2,p)
-
-        # self.trunk1 = fc(f_shape, p,  n_layers, activation_last=False)
-        # self.bias1 =fc( f_shape+domain_shape+dim, 1, 4, False) 
         self.bias1 =fc( 3*p, 1, n_layers, False)
 
 
 
 
     def forward(self, X):
-        y,f,dom=X
+        y,f,dom, mask=X
 
        
-        branch2= self.branch2(self.attention2(dom,dom,dom).squeeze(-1))
-        branch1= self.branch1(self.attention(f.unsqueeze(-1),f.unsqueeze(-1),f.unsqueeze(-1)).squeeze(-1))
+        branch2= self.branch2(self.attention2(dom,dom,dom, mask).squeeze(-1))
+        branch1= self.branch1(self.attention1(f.unsqueeze(-1),f.unsqueeze(-1),f.unsqueeze(-1), mask).squeeze(-1))
 
         # trunk = self.attention2(y.unsqueeze(-1),dom,y.unsqueeze(-1)).squeeze(-1)
         trunk=self.trunk1(y)

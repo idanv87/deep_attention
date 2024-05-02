@@ -495,102 +495,54 @@ def bilinear_upsample(f):
 
 
 class SelfAttention(nn.Module):
-    def __init__(self, input_dim, hidden_dim):
+    def __init__(self, input_dims, hidden_dim):
         super(SelfAttention, self).__init__()
-        self.input_dim = input_dim
         self.hidden_dim = hidden_dim
         
-        self.query = nn.Linear(1, hidden_dim, bias=True)
-        self.key = nn.Linear(1, hidden_dim, bias=True)
-        self.value = nn.Linear(1, hidden_dim, bias=True)
+        self.query = nn.Linear(input_dims[0], hidden_dim)
+        self.key = nn.Linear(input_dims[1], hidden_dim)
+        self.value = nn.Linear(input_dims[2], hidden_dim)
         
-    def forward(self, x1,x2,x3):
+        
+    def forward(self, x1,x2,x3, mask):
         q = self.query(x1)
         k = self.key(x2)
         v = self.value(x3)
-        
+
         attention_scores = torch.matmul(q, k.transpose(-2, -1)) / torch.sqrt(torch.tensor(self.hidden_dim, dtype=torch.float32))
-        attention_weights = F.softmax(attention_scores, dim=-1)
+        
+        attention_weights = F.softmax(attention_scores+mask, dim=-1)
         
         output = torch.matmul(attention_weights, v)
         return output
     
 class SelfAttention2(nn.Module):
-    def __init__(self, input_dim, hidden_dim):
+    def __init__(self, input_dims, hidden_dim):
         super(SelfAttention2, self).__init__()
-        self.input_dim = input_dim
         self.hidden_dim = hidden_dim
         
-        self.query = nn.Linear(2, hidden_dim)
-        self.key = nn.Linear(2, hidden_dim)
-        self.value = nn.Linear(2, hidden_dim)
+        self.query = nn.Linear(input_dims[0], hidden_dim)
+        self.key = nn.Linear(input_dims[1], hidden_dim)
+        self.value = nn.Linear(input_dims[2], hidden_dim)
         
-    def forward(self, x1,x2,x3):
+    def forward(self, x1,x2,x3, mask):
         q = self.query(x1)
         k = self.key(x2)
         v = self.value(x3)
         
         attention_scores = torch.matmul(q, k.transpose(-2, -1)) / torch.sqrt(torch.tensor(self.hidden_dim, dtype=torch.float32))
-        attention_weights = F.softmax(attention_scores, dim=-1)
+        
+        attention_weights = F.softmax(attention_scores+mask, dim=-1)
         
         output = torch.matmul(attention_weights, v)
         return output    
 
-# x1 = torch.randn(4, 400,2 )  # Batch size 4, sequence length 10, input dimension 64
-# x2 = torch.randn(4, 400, 2)   # Batch size 4, sequence length 8, input dimension 64
-# x3 = torch.randn(4, 400,1 )  # Batch size 4, sequence length 12, input dimension 64
+# x1 = torch.randn(2, 4,1 )  # Batch size 4, sequence length 10, input dimension 64
+# x2 = torch.randn(2, 4, 1)   # Batch size 4, sequence length 8, input dimension 64
+# x3 = torch.randn(2, 4,1 )  # Batch size 4, sequence length 12, input dimension 64
 
-# # # # # # Apply self-attention to each input
-# attention_layer = SelfAttention(input_dim=400, hidden_dim=1)
-# print(attention_layer(x1,x2,x3).shape  )
+# # # # # # # Apply self-attention to each input
+# attention_layer = SelfAttention(input_dim=4, hidden_dim=1)
+# print(attention_layer(x1,x2,x3,[[1],[2]]).shape  )
 
 
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-
-class SelfAttention3(nn.Module):
-    def __init__(self, input_dim, mask_indices):
-        super(SelfAttention3, self).__init__()
-        self.input_dim = input_dim
-        self.mask_indices = mask_indices
-        self.W_query = nn.Linear(input_dim, input_dim)
-        self.W_key = nn.Linear(input_dim, input_dim)
-        self.W_value = nn.Linear(input_dim, input_dim)
-
-    def forward(self, f):
-        batch_size = f.size(0)
-        query = self.W_query(f)
-        key = self.W_key(f)
-        value = self.W_value(f)
-        
-        # Calculate attention scores
-        scores = torch.matmul(query, key.transpose(-2, -1)) / torch.sqrt(torch.tensor(self.input_dim, dtype=torch.float32))
-        
-        # Apply mask to attention scores
-        mask = torch.ones_like(scores)
-        mask[:, self.mask_indices, :] = float('-inf')
-        scores_masked = scores + mask
-        
-        # Apply softmax to get attention weights
-        attention_weights = F.softmax(scores_masked, dim=-1)
-        
-        # Apply attention weights to value to get attention output
-        attention_output = torch.matmul(attention_weights, value)
-        
-        return attention_output, attention_weights
-
-# Example usage:
-input_dim = 64
-n = 6  # Size of vector f
-mask_indices = [1, 3, 4]
-
-# Create a random vector f
-f = torch.randn(1, n, input_dim)
-
-# Create and apply self-attention layer
-attention_layer = SelfAttention3(input_dim, mask_indices)
-attention_output, attention_weights = attention_layer(f)
-
-print("Attention Output shape:", attention_output.shape)
-print("Attention Weights shape:", attention_weights.shape)

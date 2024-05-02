@@ -20,36 +20,21 @@ import time
 from utils import count_trainable_params, extract_path_from_dir, save_uniqe, grf, bilinear_upsample,upsample, generate_random_matrix
 from constants import Constants
 # names=[(1,1), (1,0.9), (1,0.8), (1,0.7), (1,0.6), (1,0.5)]
-names=[(Constants.n, Constants.n)]
-def generate_domains(i,j):
-    assert i<Constants.n+1
-    assert j<Constants.n+1
+names=[(0,10,0, 10)]
+def generate_domains(i1,i2,j1,j2):
     d_ref=domain(np.linspace(0,1,Constants.n),np.linspace(0,1,Constants.n))
     x_ref=d_ref.x
     y_ref=d_ref.y
-    return domain(x_ref[:i], y_ref[:j])
+    return domain(x_ref[i1:i2], y_ref[j1:j2])
     
     
-def generate_f_g(n, seedf,seedg1, seedg2):
+def generate_f_g(shape, seedf):
 
-        f=generate_random_matrix(n**2,seed=seedf)
-        g1=generate_random_matrix(int((4*n-4)/2),seed=seedg1)
-        g2=generate_random_matrix(int((4*n-4)/2),seed=seedg2)
-        
-
-        g1=bilinear_upsample(g1)
-        g2=bilinear_upsample(g2)
+        f=generate_random_matrix(shape,seed=seedf)
         
         f=(f-np.mean(f))/np.std(f)
-        g1=(g1-np.mean(g1))/np.std(g1)
-        g2=(g2-np.mean(g2))/np.std(g2)
-        
-        g=(g1+Constants.l*g2)
-        ga=g[:n]
-        gb=g[n-1:2*n-1]
-        gc=g[2*n-2:3*n-2]
-        gd=np.concatenate([g[3*n-3:4*n-3], [g[0]]])
-        return f,ga,gb,gc,gd
+       
+        return f
     
 def generate_data(names,  save_path, number_samples,Seed=None):
     X=[]
@@ -57,18 +42,19 @@ def generate_data(names,  save_path, number_samples,Seed=None):
  
     for _,dom in enumerate(names):
         d_ref=domain(np.linspace(0,1,Constants.n),np.linspace(0,1,Constants.n))
-        d=generate_domains(names[0],names[1])
+        f_ref=np.zeros(d_ref.nx*d_ref.ny)
+        d=generate_domains(dom[0],dom[1], dom[2],dom[3])
+        
 
         for i in range(number_samples):
             try:
-                f,ga,gb,gc,gd=generate_f_g(d.nx, Seed,Seed, Seed)
+                f=generate_f_g(d.nx*d.ny, Seed)
             except:
-                f,ga,gb,gc,gd=generate_f_g(d.nx, i,i+1, i+2)
-
-            A,G=d.solver(f.reshape((d.nx,d.ny)),[ga*0,gb*0,gc*0,gd*0])
+                f=generate_f_g(d.nx*d.ny, i)
+            f_ref[d.valid_indices]=f
+            A,G=d.solver(f.reshape((d.nx,d.ny)))
             # A,G=d.solver(0*upsample(f[0],int(n/2)).reshape((n,n)),[ga,gb,gc,gd])
             u=scipy.sparse.linalg.spsolve(A, G)
-            ones_matrix = np.zeros((400, 2))
             for j in range(len(d.X)):
                 
              
@@ -76,8 +62,8 @@ def generate_data(names,  save_path, number_samples,Seed=None):
                     torch.tensor([d.X[j],d.Y[j]], dtype=torch.float32),
                     # torch.tensor(np.concatenate([g.real, g.imag]), dtype=torch.float32),
                     # torch.tensor(np.tile(f[:, np.newaxis], (1, 3)), dtype=torch.float32),
-                    torch.tensor(f, dtype=torch.float32),
-                    torch.tensor(np.hstack((xx.reshape(-1, 1), yy.reshape(-1, 1))), dtype=torch.float32),
+                    torch.tensor(f_ref, dtype=torch.float32),
+                    torch.tensor(np.hstack((d_ref.X.reshape(-1, 1), d_ref.Y.reshape(-1, 1))), dtype=torch.float32),
                     # ,
                     ]
                 Y1=torch.tensor(u[j], dtype=torch.cfloat)
@@ -92,7 +78,7 @@ def generate_data(names,  save_path, number_samples,Seed=None):
 if __name__=='__main__':
     pass
 # if False: 400 is good for n=20
-    X,Y=generate_data(names, Constants.train_path, number_samples=200, Seed=None)
+    X,Y=generate_data(names, Constants.train_path, number_samples=1, Seed=None)
 
     X_test, Y_test=generate_data(names,Constants.test_path,number_samples=1, Seed=800)
 

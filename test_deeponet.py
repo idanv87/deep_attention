@@ -61,7 +61,7 @@ class domain:
         self.X=xx.flatten()
         self.Y=yy.flatten()
         self.D=csr_matrix(kron(self.calc_D_x(), identity(len(self.y))),dtype=np.cfloat)+csr_matrix(kron(identity(len(self.x)), self.calc_D_y()), dtype=np.cfloat)
-        # self.valid_indices, self.non_valid_indices=self.masking_coordinates()
+        self.valid_indices, self.non_valid_indices=self.masking_coordinates()
        
         
     def  calc_D_x(self):   
@@ -112,7 +112,7 @@ class domain:
         xx,yy=np.meshgrid(np.linspace(0,1, Constants.n),np.linspace(0,1, Constants.n),indexing='ij')
         X0=xx.flatten()
         Y0=yy.flatten()
-        original_points=[(xx[i],yy[i]) for i in range(len(xx))]
+        original_points=[(X0[i],Y0[i]) for i in range(len(X0))]
         points=[(self.X[i],self.Y[i]) for i in range(len(self.X))]
         valid_indices=[]
         masked_indices=[]

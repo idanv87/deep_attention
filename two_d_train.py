@@ -35,26 +35,58 @@ if __name__=="__main__":
     # for param in model.parameters():
     #     param.data.zero_()
     
-    train_data=extract_path_from_dir(Constants.train_path)
+    train_data=extract_path_from_dir(Constants.train_path+'data/')
+    train_masks=extract_path_from_dir(Constants.train_path+'masks/')
+    train_domains=extract_path_from_dir(Constants.train_path+'domains/')
+    train_functions=extract_path_from_dir(Constants.train_path+'functions/')
+    
     s_train=[torch.load(f) for f in train_data]
-    X_train=[s[0] for s in s_train]
-    Y_train=[s[1] for s in s_train]
+    masks_train=torch.load(train_masks[0])
+    domains_train=torch.load(train_domains[0])
+    functions_train=torch.load(train_functions[0])
+    
+    X_train=[]
+    Y_train=[]
+    for s in s_train:
+        X=s[0]
+        y=X[0]
+        mask= masks_train[X[2]]
+        domain= domains_train[X[2]]
+        function=functions_train[X[2]][X[1]]
+        X_train.append([y,function,domain,mask])
+        Y_train.append(s[1])
     train_dataset = SonarDataset(X_train, Y_train)
 
     train_size = int(0.8 * len(train_dataset))
     val_size = len(train_dataset) - train_size
 
-    start=time.time()
     train_dataset, val_dataset = torch.utils.data.random_split(
         train_dataset, [train_size, val_size]
     )
     train_dataloader = DataLoader(train_dataset, batch_size=Constants.batch_size, shuffle=True, drop_last=False,num_workers=0)
     val_dataloader=DataLoader(val_dataset, batch_size=Constants.batch_size, shuffle=True, drop_last=False,num_workers=0)
         
-    test_data=extract_path_from_dir(Constants.test_path)
+    test_data=extract_path_from_dir(Constants.test_path+'data/')
+    test_masks=extract_path_from_dir(Constants.test_path+'masks/')
+    test_domains=extract_path_from_dir(Constants.test_path+'domains/')
+    test_functions=extract_path_from_dir(Constants.test_path+'functions/')
+    
     s_test=[torch.load(f) for f in test_data]
-    X_test=[s[0] for s in s_test]
-    Y_test=[s[1] for s in s_test]
+    masks_test=torch.load(test_masks[0])
+    domains_test=torch.load(test_domains[0])
+    functions_test=torch.load(test_functions[0])
+    
+    X_test=[]
+    Y_test=[]
+    for s in s_test:
+        X=s[0]
+        y=X[0]
+        mask= masks_test[X[2]]
+        domain= domains_test[X[2]]
+        function=functions_test[X[2]][X[1]]
+        X_test.append([y,function,domain,mask])
+        Y_test.append(s[1])
+    
     test_dataset = SonarDataset(X_test, Y_test)
     test_dataloader=DataLoader(test_dataset, batch_size=Constants.batch_size, shuffle=False, drop_last=False)
 

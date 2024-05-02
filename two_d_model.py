@@ -17,7 +17,7 @@ import numpy as np
 import os
 import sys
 import time
-from utils import SelfAttention, SelfAttention2
+from utils import SelfAttention
 
 
 class FullyConnectedLayer(nn.Module):

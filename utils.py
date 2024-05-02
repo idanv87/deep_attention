@@ -315,6 +315,10 @@ def step_fourier(L,Theta):
     return np.array(coeff)
 
 def save_uniqe(file, path):
+    isExist = os.path.exists(path)
+    if not isExist:
+        os.makedirs(path)
+        
     uniq_filename = (
             str(datetime.datetime.now().date())
             + "_"
@@ -494,6 +498,12 @@ def bilinear_upsample(f):
     return upsampled_f    
 
 
+
+
+
+
+# Example usage:
+
 class SelfAttention(nn.Module):
     def __init__(self, input_dims, hidden_dim):
         super(SelfAttention, self).__init__()
@@ -537,6 +547,8 @@ class SelfAttention2(nn.Module):
         output = torch.matmul(attention_weights, v)
         return output    
 
+
+
 # x1 = torch.randn(2, 4,1 )  # Batch size 4, sequence length 10, input dimension 64
 # x2 = torch.randn(2, 4, 1)   # Batch size 4, sequence length 8, input dimension 64
 # x3 = torch.randn(2, 4,1 )  # Batch size 4, sequence length 12, input dimension 64
@@ -546,3 +558,11 @@ class SelfAttention2(nn.Module):
 # print(attention_layer(x1,x2,x3,[[1],[2]]).shape  )
 
 
+def plot_cloud(X,Y,color):
+    from scipy.spatial import ConvexHull
+    points = np.column_stack((X, Y))
+    hull = ConvexHull(points)
+    convexlist = hull.simplices
+    for simplex in hull.simplices:
+            plt.plot(points[simplex, 0], points[simplex, 1], color=color)
+    

@@ -531,8 +531,7 @@ class SelfAttention2(nn.Module):
         v = self.value(x3)
         
         attention_scores = torch.matmul(q, k.transpose(-2, -1)) / torch.sqrt(torch.tensor(self.hidden_dim, dtype=torch.float32))
-        # attention_weights = F.softmax(attention_scores, dim=-1)
-        attention_weights = attention_scores
+        attention_weights = F.softmax(attention_scores, dim=-1)
         output = torch.matmul(attention_weights, v)
         return output    
 

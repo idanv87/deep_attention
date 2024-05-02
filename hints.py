@@ -34,7 +34,7 @@ def NN( F, X, Y):
  
     n=15
     model=deeponet(dim=2,f_shape=n**2, domain_shape=2, p=80) 
-    best_model=torch.load(Constants.path+'runs/'+'2024.05.01.21.20.36best_model.pth')
+    best_model=torch.load(Constants.path+'runs/'+'2024.05.02.10.24.41best_model.pth')
     model.load_state_dict(best_model['model_state_dict'])
   
 

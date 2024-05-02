@@ -29,7 +29,6 @@ def generate_domains(i,j):
     y_ref=d_ref.y
     return domain(x_ref[:i], y_ref[:j])
     
-    
 def generate_f_g(n, seedf,seedg1, seedg2):
 
         f=generate_random_matrix(n**2,seed=seedf)
@@ -56,8 +55,9 @@ def generate_data(names,  save_path, number_samples,Seed=None):
     Y=[]
  
     for _,dom in enumerate(names):
-        d_ref=domain(np.linspace(0,1,Constants.n),np.linspace(0,1,Constants.n))
-        d=generate_domains(names[0],names[1])
+        
+        d=domain(np.linspace(0,1,Constants.n),np.linspace(0,1,Constants.n))
+
 
         for i in range(number_samples):
             try:
@@ -68,7 +68,7 @@ def generate_data(names,  save_path, number_samples,Seed=None):
             A,G=d.solver(f.reshape((d.nx,d.ny)),[ga*0,gb*0,gc*0,gd*0])
             # A,G=d.solver(0*upsample(f[0],int(n/2)).reshape((n,n)),[ga,gb,gc,gd])
             u=scipy.sparse.linalg.spsolve(A, G)
-            ones_matrix = np.zeros((400, 2))
+           
             for j in range(len(d.X)):
                 
              
@@ -77,7 +77,7 @@ def generate_data(names,  save_path, number_samples,Seed=None):
                     # torch.tensor(np.concatenate([g.real, g.imag]), dtype=torch.float32),
                     # torch.tensor(np.tile(f[:, np.newaxis], (1, 3)), dtype=torch.float32),
                     torch.tensor(f, dtype=torch.float32),
-                    torch.tensor(np.hstack((xx.reshape(-1, 1), yy.reshape(-1, 1))), dtype=torch.float32),
+                    torch.tensor(np.hstack((d.X.reshape(-1, 1), d.Y.reshape(-1, 1))), dtype=torch.float32),
                     # ,
                     ]
                 Y1=torch.tensor(u[j], dtype=torch.cfloat)

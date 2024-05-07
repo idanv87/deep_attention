@@ -17,7 +17,7 @@ import numpy as np
 import os
 import sys
 import time
-from utils import SelfAttention
+from utils import SelfAttention, SelfAttention2
 
 
 class FullyConnectedLayer(nn.Module):
@@ -77,13 +77,14 @@ class deeponet_f(nn.Module):
         n_layers = 4
         self.n = p
 
-        self.attention1=SelfAttention(input_dims=[1,1,1], hidden_dim=1)
-        self.attention2=SelfAttention(input_dims=[2,2,2], hidden_dim=1)
+        self.attention1=SelfAttention2(input_dims=[1,1,1], hidden_dim=1)
+        self.attention2=SelfAttention2(input_dims=[2,2,2], hidden_dim=1)
         
-        self.branch1=FullyConnectedLayer(f_shape,p)
-        self.branch2=FullyConnectedLayer(f_shape,p)
-        self.trunk1=FullyConnectedLayer(2,p)
-        self.bias1 =fc( 3*p, 1, n_layers, False)
+        self.branch1=FullyConnectedLayer(f_shape,f_shape)
+        self.branch2=FullyConnectedLayer(2,1)
+        self.trunk1=FullyConnectedLayer(2,f_shape)
+        self.bias1 =fc( 3*f_shape, 1, n_layers, False)
+       
 
 
 
@@ -92,7 +93,7 @@ class deeponet_f(nn.Module):
         y,f,dom, mask=X
 
        
-        branch2= self.branch2(self.attention2(dom,dom,dom, mask).squeeze(-1))
+        branch2= self.branch2(self.attention2(dom,dom,dom, mask).squeeze(-1)).squeeze(-1)
         branch1= self.branch1(self.attention1(f.unsqueeze(-1),f.unsqueeze(-1),f.unsqueeze(-1), mask).squeeze(-1))
 
         # trunk = self.attention2(y.unsqueeze(-1),dom,y.unsqueeze(-1)).squeeze(-1)
@@ -119,7 +120,39 @@ class deeponet(nn.Module):
             # return self.model1(X)
             return self.model1(X)+1J*self.model2(X)
 
+from transformer import EncoderLayer, EncoderLayer2
+class Transformer(nn.Module):
+    def __init__(self,f_shape, p):
+        super().__init__()
 
+        n_layers = 4
+        self.n = p
+
+        self.encoder1=EncoderLayer(1,p)
+        self.encoder2=EncoderLayer(2,p)
+        self.decoder=EncoderLayer(1,p)
+        
+        self.linear1=nn.Linear(2,1, bias=False)
+        self.trunk1=FullyConnectedLayer(2,p)
+        self.branch1=FullyConnectedLayer(f_shape,p)
+        self.bias1 =fc( 2*p, 1, n_layers, False)
+
+    def forward(self, X):
+        y,f,dom, mask=X
+
+       
+        e2= self.linear1(self.encoder2(dom, mask))
+        e1= self.encoder1(f.unsqueeze(-1),f.unsqueeze(-1),f.unsqueeze(-1), mask)
+        branch=self.branch1(self.decoder(e1,e2).squeeze(-1))
+        # trunk = self.attention2(y.unsqueeze(-1),dom,y.u,nsqueeze(-1)).squeeze(-1)
+        trunk=self.trunk1(y)
+        bias = torch.squeeze(self.bias1(torch.cat((branch,trunk),dim=1)))
+
+        # return torch.sum(branch1*branch2*trunk, dim=-1, keepdim=False)+bias
+        return torch.sum(branch*trunk, dim=-1, keepdim=False)+bias
+
+
+        
 # n=30
 # model=deeponet(dim=2,f_shape=n**2, domain_shape=2, p=80) 
 

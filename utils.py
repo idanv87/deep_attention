@@ -509,9 +509,9 @@ class SelfAttention(nn.Module):
         super(SelfAttention, self).__init__()
         self.hidden_dim = hidden_dim
         
-        self.query = nn.Linear(input_dims[0], hidden_dim)
-        self.key = nn.Linear(input_dims[1], hidden_dim)
-        self.value = nn.Linear(input_dims[2], hidden_dim)
+        self.query = nn.Linear(input_dims[0], hidden_dim, bias=False)
+        self.key = nn.Linear(input_dims[1], hidden_dim, bias=False)
+        self.value = nn.Linear(input_dims[2], hidden_dim, bias=False)
         
         
     def forward(self, x1,x2,x3, mask):
@@ -531,22 +531,23 @@ class SelfAttention2(nn.Module):
         super(SelfAttention2, self).__init__()
         self.hidden_dim = hidden_dim
         
-        self.query = nn.Linear(input_dims[0], hidden_dim)
-        self.key = nn.Linear(input_dims[1], hidden_dim)
-        self.value = nn.Linear(input_dims[2], hidden_dim)
+        self.query = nn.Linear(input_dims[0], hidden_dim,bias=False)
+        self.key = nn.Linear(input_dims[1], hidden_dim,bias=False)
+        self.value = nn.Linear(input_dims[2], hidden_dim,bias=False)
+        
         
     def forward(self, x1,x2,x3, mask):
-        q = self.query(x1)
-        k = self.key(x2)
-        v = self.value(x3)
-        
+        q = x1
+        k = x2
+        v = x3
+
         attention_scores = torch.matmul(q, k.transpose(-2, -1)) / torch.sqrt(torch.tensor(self.hidden_dim, dtype=torch.float32))
         
         attention_weights = F.softmax(attention_scores+mask, dim=-1)
         
         output = torch.matmul(attention_weights, v)
-        return output    
-
+        return output
+    
 
 
 # x1 = torch.randn(2, 4,1 )  # Batch size 4, sequence length 10, input dimension 64
@@ -566,3 +567,16 @@ def plot_cloud(X,Y,color):
     for simplex in hull.simplices:
             plt.plot(points[simplex, 0], points[simplex, 1], color=color)
     
+def block_matrix(A,B):
+    n_rows = A.shape[0] + B.shape[0]
+    n_cols = A.shape[1] + B.shape[1]
+
+# Create zero matrices for the off-diagonal blocks
+    zero_matrix_top = np.zeros((A.shape[0], B.shape[1]))
+    zero_matrix_bottom = np.zeros((B.shape[0], A.shape[1]))
+
+# Construct the block matrix
+    block_matrix = np.block([[A, zero_matrix_top], [zero_matrix_bottom, B]]) 
+    return block_matrix   
+
+

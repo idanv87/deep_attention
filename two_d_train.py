@@ -32,6 +32,10 @@ from two_d_model import deeponet
 if __name__=="__main__":
     n=Constants.n
     model=deeponet(dim=2,f_shape=n**2, domain_shape=2, p=80) 
+    submodel=model.model1.attention2
+    
+    # for name, layer in model.named_children():
+    #     print(name, layer)
     # for param in model.parameters():
     #     param.data.zero_()
     
@@ -101,7 +105,7 @@ if __name__=="__main__":
     if not isExist:
         os.makedirs(experment_path)  
 
-    # best_model=torch.load(Constants.path+'runs/'+'2024.04.23.23.33.45best_model.pth')
+    # best_model=torch.load(Constants.path+'runs/'+'2024.05.02.23.05.48best_model.pth')
     # model.load_state_dict(best_model['model_state_dict'])
 
 

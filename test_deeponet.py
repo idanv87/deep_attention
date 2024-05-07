@@ -95,6 +95,7 @@ class domain:
         D2[0,1]=2    
         return csr_matrix(D2/self.dy/self.dy   )
     
+        
     def solver(self,f,g=0):
         bc=(f*0).astype(complex)
         try:
@@ -109,19 +110,21 @@ class domain:
         return self.D+Constants.k*scipy.sparse.identity(self.D.shape[0]), f+bc
     
     def masking_coordinates(self):
+
         xx,yy=np.meshgrid(np.linspace(0,1, Constants.n),np.linspace(0,1, Constants.n),indexing='ij')
         X0=xx.flatten()
         Y0=yy.flatten()
         original_points=[(X0[i],Y0[i]) for i in range(len(X0))]
-        points=[(self.X[i],self.Y[i]) for i in range(len(self.X))]
+        points=np.array([(self.X[i],self.Y[i]) for i in range(len(self.X))])
         valid_indices=[]
         masked_indices=[]
         for j,p in enumerate(original_points):
-            if p in points:
+            dist=[np.linalg.norm(np.array(p)-points[i]) for i in range(points.shape[0])]
+            if np.min(dist)<1e-14:
                 valid_indices.append(j)
             else:
                 masked_indices.append(j)    
-        return valid_indices, masked_indices
+        return valid_indices, masked_indices    
             
 # n=30    
 # x=np.linspace(0,1,n)

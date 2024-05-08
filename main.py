@@ -22,8 +22,8 @@ from constants import Constants
 # names=[(1,1), (1,0.9), (1,0.8), (1,0.7), (1,0.6), (1,0.5)]
 
 names=[]
-for k in range(1,2):
-    for l in range(1,2):
+for k in range(1,5):
+    for l in range(1,5):
         names.append( (0,int(Constants.n/k),0,int(Constants.n/l)) )
 
             

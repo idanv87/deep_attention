@@ -123,7 +123,7 @@ def generate_rect():
     
     d_ref=domain(np.linspace(0,1,Constants.n),np.linspace(0,1,Constants.n))
     f_ref=np.zeros(d_ref.nx*d_ref.ny)
-    d=generate_domains(0,10, 5,15)
+    d=generate_domains(0,8, 0,8)
     f=generate_f_g(d.nx*d.ny, 500)
     f_ref[d.valid_indices]=f
     mask = np.zeros((len(f_ref),len(f_ref)))

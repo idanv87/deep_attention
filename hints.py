@@ -38,7 +38,7 @@ def NN2( F, X, Y, dom,mask):
     
 
     
-    best_model=torch.load(Constants.path+'runs/'+'2024.05.09.00.04.06best_model.pth')
+    best_model=torch.load(Constants.path+'runs/'+'2024.05.09.07.51.45best_model.pth')
     model.load_state_dict(best_model['model_state_dict'])
   
 
@@ -92,8 +92,8 @@ def NN( F, X, Y, dom,mask):
     return torch.real(pred2).numpy()+1J*torch.imag(pred2).numpy()
    
 
-# A,f_ref,f,dom,mask, X,Y, valid_indices=generate_example()
-A,f_ref,f,dom,mask, X,Y, valid_indices=generate_rect()
+A,f_ref,f,dom,mask, X,Y, valid_indices=generate_example()
+# A,f_ref,f,dom,mask, X,Y, valid_indices=generate_rect()
 sol=scipy.sparse.linalg.spsolve(A, f)
 ev,v=scipy.sparse.linalg.eigs(-A, k=6, M=None, sigma=None, which='SM')
 
@@ -104,7 +104,7 @@ err=[]
 color=[]
 def hints(A,b,x0):
     for k in range(1000):
-        if (k+1)%10==0:
+        if (k+1)%3==0:
             f_real=(-A@x0+b).real
             f_imag=(-A@x0+b).imag
             mu_real=np.mean(f_real)
@@ -113,12 +113,14 @@ def hints(A,b,x0):
             s_imag=np.std(f_imag)
             f_ref_real=np.zeros(Constants.n**2)
             f_ref_imag=np.zeros(Constants.n**2)
+            
+            
             f_ref_real[valid_indices]=(f_real-mu_real)/s_real
             f_ref_imag[valid_indices]=(f_imag-mu_imag)/s_imag
-            corr_real=(NN(f_ref_real,X,Y, dom, mask)+mu_real*NN2(f_ref_real*0+1,X,Y,dom,mask)/s_real)*s_real
-            corr_imag=(NN(f_ref_imag,X,Y, dom, mask)+mu_imag*NN2(f_ref_real*0+1,X,Y,dom,mask)/s_imag)*s_imag
-            # corr_real=(NN(f_ref_real,X,Y, dom, mask)+scipy.sparse.linalg.spsolve(A, b*0+mu_real)/s_real)*s_real
-            # corr_imag=(NN(f_ref_imag,X,Y, dom, mask)+scipy.sparse.linalg.spsolve(A, b*0+mu_imag)/s_imag)*s_imag
+            # corr_real=(NN(f_ref_real,X,Y, dom, mask)+mu_real*NN2(f_ref_real*0+1,X,Y,dom,mask)/s_real)*s_real
+            # corr_imag=(NN(f_ref_imag,X,Y, dom, mask)+mu_imag*NN2(f_ref_real*0+1,X,Y,dom,mask)/s_imag)*s_imag
+            corr_real=(NN(f_ref_real,X,Y, dom, mask)+scipy.sparse.linalg.spsolve(A, b*0+mu_real)/s_real)*s_real
+            corr_imag=(NN(f_ref_imag,X,Y, dom, mask)+scipy.sparse.linalg.spsolve(A, b*0+mu_imag)/s_imag)*s_imag
             corr=corr_real+1J*corr_imag
             x0=x0+corr
             color.append('red')

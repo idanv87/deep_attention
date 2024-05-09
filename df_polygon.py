@@ -13,9 +13,10 @@ def generate_f_g(shape, seedf):
 
         f=generate_random_matrix(shape,seed=seedf)
         
-        f=(f-np.mean(f))/np.std(f)
+        # f=(f-np.mean(f))/np.std(f)
+        f=f/np.std(f)
        
-        return f
+        return f+1
 
 def masking_coordinates(X,Y):
         xx,yy=np.meshgrid(np.linspace(0,1, Constants.n),np.linspace(0,1, Constants.n),indexing='ij')
@@ -123,7 +124,7 @@ def generate_rect():
     
     d_ref=domain(np.linspace(0,1,Constants.n),np.linspace(0,1,Constants.n))
     f_ref=np.zeros(d_ref.nx*d_ref.ny)
-    d=generate_domains(0,8, 0,8)
+    d=generate_domains(8,15, 2,8)
     f=generate_f_g(d.nx*d.ny, 500)
     f_ref[d.valid_indices]=f
     mask = np.zeros((len(f_ref),len(f_ref)))

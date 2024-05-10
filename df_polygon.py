@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from test_deeponet import domain
 from utils import *
 from scipy.sparse import csr_matrix, kron, identity
+from packages.my_packages import  interpolation_2D
 def generate_domains(i1,i2,j1,j2):
     d_ref=domain(np.linspace(0,1,Constants.n),np.linspace(0,1,Constants.n))
     x_ref=d_ref.x
@@ -16,7 +17,7 @@ def generate_f_g(shape, seedf):
         # f=(f-np.mean(f))/np.std(f)
         f=f/np.std(f)
        
-        return f+1
+        return f
 
 def masking_coordinates(X,Y):
         xx,yy=np.meshgrid(np.linspace(0,1, Constants.n),np.linspace(0,1, Constants.n),indexing='ij')
@@ -124,7 +125,7 @@ def generate_rect():
     
     d_ref=domain(np.linspace(0,1,Constants.n),np.linspace(0,1,Constants.n))
     f_ref=np.zeros(d_ref.nx*d_ref.ny)
-    d=generate_domains(8,15, 2,8)
+    d=generate_domains(0,7, 0,7)
     f=generate_f_g(d.nx*d.ny, 500)
     f_ref[d.valid_indices]=f
     mask = np.zeros((len(f_ref),len(f_ref)))
@@ -132,6 +133,26 @@ def generate_rect():
     A,G=d.solver(f.reshape((d.nx,d.ny)))
     dom=np.hstack((d_ref.X.reshape(-1, 1), d_ref.Y.reshape(-1, 1)))
     return A, f_ref,f,dom,mask, d.X, d.Y, d.valid_indices
-        
+
+def generate_rect2(N):
+    
+    d_ref=domain(np.linspace(0,1,Constants.n),np.linspace(0,1,Constants.n))
+    f_ref=np.zeros(d_ref.nx*d_ref.ny)
+    d=generate_domains(0,7, 0,7)
+    d_super=domain(np.linspace(d.x[0],d.x[-1],N), np.linspace(d.y[0],d.y[-1],N))
+
+    f=generate_f_g(N**2, 500)
+    func=interpolation_2D(d_super.X,d_super.Y,f)
+    
+    f_ref[d.valid_indices]=func(d.X,d.Y)
+    mask = np.zeros((len(f_ref),len(f_ref)))
+    mask[:, d.non_valid_indices] = float('-inf')  
+   
+    A,G=d_super.solver(f.reshape((N,N)))
+    dom=np.hstack((d_ref.X.reshape(-1, 1), d_ref.Y.reshape(-1, 1)))
+    return A, f_ref,f,dom,mask, d_super.X, d_super.Y, d.valid_indices        
 # D,f,dom,mask=generate_example()
 
+# A, f_ref,f,dom,mask, X, Y, valid_indices =generate_rect2(30)
+# print(mask.shape)
+# print(f_ref.shape)

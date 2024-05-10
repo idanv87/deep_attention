@@ -579,4 +579,9 @@ def block_matrix(A,B):
     block_matrix = np.block([[A, zero_matrix_top], [zero_matrix_bottom, B]]) 
     return block_matrix   
 
-
+from packages.my_packages import  interpolation_2D
+def subsample(f,X,Y):
+    f=interpolation_2D(X,Y,f)
+    return f
+    
+    

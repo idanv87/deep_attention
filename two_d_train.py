@@ -34,11 +34,6 @@ if __name__=="__main__":
     model=deeponet(dim=2,f_shape=n**2, domain_shape=2, p=80) 
     submodel=model.model1.attention2
     
-    # for name, layer in model.named_children():
-    #     print(name, layer)
-    # for param in model.parameters():
-    #     param.data.zero_()
-    
     train_data=extract_path_from_dir(Constants.train_path+'data/')
     train_masks=extract_path_from_dir(Constants.train_path+'masks/')
     train_domains=extract_path_from_dir(Constants.train_path+'domains/')

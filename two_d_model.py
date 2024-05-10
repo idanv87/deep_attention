@@ -156,3 +156,7 @@ class Transformer(nn.Module):
 # n=30
 # model=deeponet(dim=2,f_shape=n**2, domain_shape=2, p=80) 
 
+
+# model=deeponet(dim=2,f_shape=Constants.n**2, domain_shape=2, p=80) 
+# total_params = sum(p.numel() for p in model.parameters())
+# print(f"{total_params:,} total parameters.")

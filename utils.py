@@ -584,4 +584,18 @@ def subsample(f,X,Y):
     f=interpolation_2D(X,Y,f)
     return f
     
-    
+
+
+# A = pyamg.gallery.poisson((30,30), format='csr')/((1/31)**2)  # 2D Poisson problem on 500x500 grid
+# A=A-201*scipy.sparse.identity(A.shape[0])
+# f=np.random.rand(A.shape[0])  
+# x, exitCode = scipy.sparse.linalg.gmres(A, f, tol=1e-13, maxiter=800)
+# print(np.linalg.norm(A@x-f)/np.linalg.norm(f))
+# print(A.shape)
+# l,v=scipy.sparse.linalg.eigs(A, k=2,which='SR')
+# print(l)
+# ml = pyamg.smoothed_aggregation_solver(A)                   # construct the multigrid hierarchy
+#                           # print hierarchy information
+# b = np.random.rand(A.shape[0])                      # pick a random right hand side
+# x = ml.solve(b, tol=1e-10, maxiter=1000)                          # solve Ax=b to a tolerance of 1e-10
+# print("residual: ", np.linalg.norm(b-A*x)) 

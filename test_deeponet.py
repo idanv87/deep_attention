@@ -31,21 +31,7 @@ from constants import Constants
 from scipy import signal
 import matplotlib.pyplot as plt
 
-def load_models():
-    experment_path=Constants.path+'runs/'
-    model0=deeponet3(1,31,100)
-    best_model=torch.load(experment_path+'2024.04.16.13.14.53best_model.pth')
-    model0.load_state_dict(best_model['model_state_dict']) 
-    model00=deeponet3(1,31,100)
-    best_model=torch.load(experment_path+'2024.04.17.17.26.09best_model.pth')
-    model00.load_state_dict(best_model['model_state_dict'])  
-    model1=deeponet4(1,29,100)
-    best_model=torch.load(experment_path+'2024.04.16.16.24.49best_model.pth')
-    model1.load_state_dict(best_model['model_state_dict'])  
-    model11=deeponet4(1,29,100)
-    best_model=torch.load(experment_path+'2024.04.16.18.26.48best_model.pth')
-    model11.load_state_dict(best_model['model_state_dict'])
-    return model0,model1,model00,model11
+
 
 
 class domain:

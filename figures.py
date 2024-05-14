@@ -26,11 +26,11 @@ def plot_Lshape(ax2):
 
 def fig1():
     # Create a figure and two subplots
-    fig, ax = plt.subplots(1, 1, figsize=(5, 5))  # Adjust figsize as needed
+    fig, ax = plt.subplots(1, 1, figsize=(2, 2))  # Adjust figsize as needed
 
     # Plot data on the first subplot
-    ax.scatter(X0, Y0, color='black',s=10,facecolors='none', edgecolor='black')  
-    ax.set_title('Train domain')
+    ax.scatter(X0, Y0, color='black',s=10,facecolors='black', edgecolor='black')  
+    ax.set_title('Train domain, N=15')
     ax.set_xticks([0,1])
     ax.set_yticks([0,1])
     # Adjust layout and save the figure
@@ -81,5 +81,47 @@ def fig3():
     plt.savefig(path+'fig3.eps', format='eps', bbox_inches='tight', dpi=600)  # Save the figure as an image file
 
     plt.show() 
-fig1()
+    
+def fig4():
+    x0=np.linspace(0,1,15)
+    y0=np.linspace(0,1,15)
+    X0,Y0=np.meshgrid(x0,y0,indexing='ij')
+    X0=X0.flatten()
+    Y0=Y0.flatten()
+    # Create a figure and two subplots
+    fig, ax = plt.subplots(1, 1, figsize=(2, 2))  # Adjust figsize as needed
+
+    # Plot data on the first subplot
+    ax.scatter(X0, Y0, color='black',s=20,facecolors='black', edgecolor='black')  
+    # ax.set_title('Train domain')
+    ax.set_xticks([])
+    ax.set_yticks([])
+    # Adjust layout and save the figure
+    plt.tight_layout()  # Adjust subplot spacing
+
+    plt.savefig(path+'fig4.eps', format='eps', bbox_inches='tight', dpi=600) # Save the figure as an image file
+
+    # Show the plots
+    plt.show()
+        
+def fig5():
+    fig, ax = plt.subplots(1, 1, figsize=(2, 2)) 
+    data=torch.load(Constants.outputs_path+'output1.pt')
+    ax.scatter(X0, Y0, color='black',s=20,facecolors='none', edgecolor='black')  
+    ax.scatter(data['X'], data['Y'], color='black',s=10)  
+    ax.set_xticks([])
+    ax.set_yticks([]) 
+    # ax.set_title('Train domain')
+    ax.set_xticks([])
+    ax.set_yticks([])
+    # Adjust layout and save the figure
+    plt.tight_layout()  # Adjust subplot spacing
+
+    plt.savefig(path+'fig5.eps', format='eps', bbox_inches='tight', dpi=600) # Save the figure as an image file
+
+    # Show the plots
+    plt.show()
+    
+fig1()   
+ 
 

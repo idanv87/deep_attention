@@ -94,6 +94,7 @@ def plot_table(headers, data, path=None):
 
 
 def gmres(A, b, x0, nmax_iter=10, tol=1e-15):
+    A=A.todense()
     b_start=b.copy()
     r = b - np.asarray(A@x0).reshape(-1)
 
@@ -261,30 +262,25 @@ def Restriction(x,y):
         
     return R        
 
-def Restriction_matrix(X,Y,X1,Y1,X2,Y2):
+def Restriction_matrix(X,Y,X1,Y1):
     P=[]
     P1=[]
-    P2=[]
     for xx,yy in zip(X,Y):
         for xxx,yyy in zip(xx,yy):
-            P.append((xxx,yyy))
+            P.append((xx,yy))
     for xx,yy in zip(X1,Y1):
-        for xxx,yyy in zip(xx,yy):
-            P1.append((xxx,yyy))
-    for xx,yy in zip(X2,Y2):
-        for xxx,yyy in zip(xx,yy):
-            P2.append((xxx,yyy))
+            P1.append((xx,yy))
+
 
     R=[]
     R1=[]
-    R2=[]
+
     for i,p in enumerate(P):
         R.append(i)
         if p in set(P1):
             R1.append(i)
-        if p in set(P2):
-            R2.append(i)      
-    return Restriction(R,R1), Restriction(R,R2)        
+     
+    return Restriction(R,R1)    
 
 
 def Dx_forward(u,dx):

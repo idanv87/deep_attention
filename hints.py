@@ -1,18 +1,20 @@
 import os
 import sys
 import math
+import pyamg
 from matplotlib.ticker import ScalarFormatter
 
 import time
 
 from scipy.stats import qmc
+import scipy
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy
 import torch
 
 import sys
-from scipy.interpolate import Rbf
+
 
 from utils import upsample
 from constants import Constants
@@ -25,7 +27,7 @@ from packages.my_packages import Gauss_zeidel, interpolation_2D
 from two_d_model import  deeponet
 from test_deeponet import domain
 from main import generate_f_g
-from df_polygon import generate_example, generate_rect
+from df_polygon import generate_example, generate_rect, generate_rect2
  
 model=deeponet(dim=2,f_shape=Constants.n**2, domain_shape=2, p=80) 
 best_model=torch.load(Constants.path+'runs/'+'2024.05.07.11.22.05best_model.pth')
@@ -78,19 +80,39 @@ def NN( F, X, Y, dom,mask):
 
 A,f_ref,f,dom,mask, X,Y, valid_indices=generate_example()
 # A,f_ref,f,dom,mask, X,Y, valid_indices=generate_rect()
-sol=scipy.sparse.linalg.spsolve(A, f)
-ev,v=scipy.sparse.linalg.eigs(-A, k=6, M=None, sigma=None, which='SM')
 
-NN(f_ref,X,Y,dom, mask)
+A,f_ref,f,dom,mask, X,Y, valid_indices, d_super, d=generate_rect2(28)
+
 x0=(f+1J*f)*0.001
+# A = pyamg.gallery.poisson((30,30), format='csr')/((1/31)**2)
+# A=A+1*scipy.sparse.identity(A.shape[0])
+# x, exitCode = scipy.sparse.linalg.gmres(A, f,x0*100, tol=1e-13, maxiter=10)
+# print(np.linalg.norm(A@x-f)/np.linalg.norm(f))
+
+
+sol=scipy.sparse.linalg.spsolve(A, f)
+# NN(f_ref,X,Y,dom, mask)
+
+
+# l,v=scipy.sparse.linalg.eigs(A+A.conjugate().T, k=2,which='SR')
+# x, exitCode = scipy.sparse.linalg.gmres(A, f,x0, tol=1e-13, maxiter=100)
+# print(np.linalg.norm(A@x-f)/np.linalg.norm(f))
+
+
 b=f
 err=[]
 color=[]
 def hints(A,b,x0):
-    for k in range(1000):
-        if (k+1)%5==0:
+    for k in range(3000):
+        if (k+1)%120==0:
             f_real=(-A@x0+b).real
             f_imag=(-A@x0+b).imag
+            
+            func_real=interpolation_2D(d_super.X,d_super.Y,f_real)
+            func_imag=interpolation_2D(d_super.X,d_super.Y,f_imag)
+            f_real=np.array(func_real(d.X,d.Y))
+            f_imag=np.array(func_imag(d.X,d.Y))
+            
             mu_real=np.mean(f_real)
             s_real=np.std(f_real)
             mu_imag=np.mean(f_imag)
@@ -111,6 +133,7 @@ def hints(A,b,x0):
             
         else:
             x0=Gauss_zeidel(A.todense(),b,x0,theta=1)[0]
+            # x0,exitcode=scipy.sparse.linalg.gmres(A, b, x0,tol=1e-2, maxiter=1)
             color.append('black')
         if k %20 ==0:    
             print(np.linalg.norm(A@x0-b)/np.linalg.norm(b))

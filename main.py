@@ -22,8 +22,8 @@ from constants import Constants
 # names=[(1,1), (1,0.9), (1,0.8), (1,0.7), (1,0.6), (1,0.5)]
 
 names=[]
-for k in range(1,5):
-    for l in range(1,5):
+for k in range(1,2):
+    for l in range(1,2):
         names.append( (0,int(Constants.n/k),0,int(Constants.n/l)) )
 
             
@@ -43,8 +43,12 @@ def generate_f_g(shape, seedf):
         f=generate_random_matrix(shape,seed=seedf)
         
         f=(f-np.mean(f))/np.std(f)
+        if seedf==2 or seedf==800:
+            print("const")
+            f=f*0+1
+
        
-        return f
+        return f+1
     
 def generate_data(names,  save_path, number_samples,Seed=None):
     X=[]
@@ -96,7 +100,7 @@ def generate_data(names,  save_path, number_samples,Seed=None):
 if __name__=='__main__':
     pass
 # if False: 400 is good for n=20
-    X,Y,F,DOMAINS, MASKS  =generate_data(names, Constants.train_path, number_samples=3, Seed=None)
+    X,Y,F,DOMAINS, MASKS  =generate_data(names, Constants.train_path, number_samples=300, Seed=None)
     X,Y,F,DOMAINS, MASKS  =generate_data([names[0]],Constants.test_path,number_samples=1, Seed=800)
 
 

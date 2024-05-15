@@ -122,6 +122,31 @@ def fig5():
     # Show the plots
     plt.show()
     
-fig1()   
- 
+def fig6():
+    fig, (ax1,ax2) = plt.subplots(1, 2, figsize=(8, 4)) 
+    data=torch.load(Constants.outputs_path+'output3.pt')
+    ax1.scatter(X0, Y0, color='black',s=20,facecolors='none', edgecolor='black')  
+    ax1.scatter(data['X'], data['Y'], color='black',s=10)  
+    ax1.set_xticks([])
+    ax1.set_yticks([]) 
+    # ax.set_title('Train domain')
+    ax1.set_xticks([])
+    ax1.set_yticks([])
+    ax1.set_title('N=30')
+    for i in range(1,len(data['err'])):
+        ax2.scatter(i,np.log(data['err'][i]),color='black', s=1)
+    ax2.set_xlabel('iter.')
+    ax2.set_ylabel('log-err')
+    ax1.axis('tight')  
+    ax2.axis('tight')            
+    
+    # Adjust layout and save the figure
+    plt.tight_layout()  # Adjust subplot spacing
+
+    plt.savefig(path+'fig6.eps', format='eps', bbox_inches='tight', dpi=600) # Save the figure as an image file
+
+    # Show the plots
+    plt.show()
+    
+fig6()    
 

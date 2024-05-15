@@ -1,4 +1,5 @@
 from typing import Any
+import scipy.linalg
 import torch
 import numpy as np
 import matplotlib.pyplot as plt
@@ -7,6 +8,7 @@ from scipy.interpolate import Rbf
 from tabulate import tabulate
 import scipy
 from shapely.geometry import Polygon as poly
+from scipy.sparse import csr_matrix, kron, identity
 import shapely.plotting
 
 class norms:
@@ -290,3 +292,24 @@ def Dx_backward(u,dx):
     return (3*u[-1]-4*u[-2]+u[-3])/(2*dx)
 
 
+def gs_new(A):
+    from scipy.linalg.lapack import dtrtri
+    n=A.shape[0]
+    L=np.zeros((n, n),dtype=np.cfloat)
+
+
+    for i in range(n):
+        L[i,i]=1/A[i,i] 
+         
+
+    U=A-L 
+    # x0=scipy.linalg.solve(L,f-U@x0)
+    l,v=scipy.sparse.linalg.eigs(identity(n)-L@A, k=10,which='LM')
+    return l, v
+    
+# A=np.random.rand(10,10)
+# print(gs_new(A))
+# x0=np.random.rand(10)
+# f=np.random.rand(10)
+
+# print(gs_new(A,f,x0)[0]-Gauss_zeidel(A,f,x0)[0])

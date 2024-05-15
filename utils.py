@@ -584,7 +584,31 @@ def subsample(f,X,Y):
     f=interpolation_2D(X,Y,f)
     return f
     
-
+def evaluate_model(f,valid_indices,d,d_super,NN,NN2,X,Y, dom,mask):
+            f_real=(f).real
+            f_imag=(f).imag
+            
+            func_real=interpolation_2D(d_super.X,d_super.Y,f_real)
+            func_imag=interpolation_2D(d_super.X,d_super.Y,f_imag)
+            f_real=np.array(func_real(d.X,d.Y))
+            f_imag=np.array(func_imag(d.X,d.Y))
+            
+            mu_real=np.mean(f_real)
+            s_real=np.std(f_real)
+            mu_imag=np.mean(f_imag)
+            s_imag=np.std(f_imag)
+            f_ref_real=np.zeros(Constants.n**2)
+            f_ref_imag=np.zeros(Constants.n**2)
+            
+            
+            f_ref_real[valid_indices]=(f_real-mu_real)/s_real
+            f_ref_imag[valid_indices]=(f_imag-mu_imag)/(s_imag+1e-14)
+            corr_real=(NN(f_ref_real,X,Y, dom, mask)+mu_real*NN2(f_ref_real*0+1,X,Y,dom,mask)/s_real)*s_real
+            corr_imag=(NN(f_ref_imag,X,Y, dom, mask)+mu_imag*NN2(f_ref_real*0+1,X,Y,dom,mask)/(s_imag+1e-14))*s_imag
+            # corr_real=(NN(f_ref_real,X,Y, dom, mask)+scipy.sparse.linalg.spsolve(A, b*0+mu_real)/s_real)*s_real
+            # corr_imag=(NN(f_ref_imag,X,Y, dom, mask)+scipy.sparse.linalg.spsolve(A, b*0+mu_imag)/s_imag)*s_imag
+            corr=corr_real+1J*corr_imag
+            return corr
 
 # A = pyamg.gallery.poisson((30,30), format='csr')/((1/31)**2)  # 2D Poisson problem on 500x500 grid
 # A=A-201*scipy.sparse.identity(A.shape[0])
@@ -599,3 +623,16 @@ def subsample(f,X,Y):
 # b = np.random.rand(A.shape[0])                      # pick a random right hand side
 # x = ml.solve(b, tol=1e-10, maxiter=1000)                          # solve Ax=b to a tolerance of 1e-10
 # print("residual: ", np.linalg.norm(b-A*x)) 
+
+# n=1000
+# m=1
+# x=np.linspace(0,1,n)
+# cov=np.zeros((n,n))
+# mean=np.zeros(n)
+# for i in range(n):
+#     for j in range(n):
+#         cov[i,j]=np.exp(-(x[i]-x[j])**2)
+
+# f=np.random.multivariate_normal(mean, cov,size=m)
+# print(np.mean(f))
+

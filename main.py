@@ -17,7 +17,7 @@ from test_deeponet import domain
 # from geometry import Rect
 import time
 
-from utils import count_trainable_params, extract_path_from_dir, save_uniqe, grf, bilinear_upsample,upsample, generate_random_matrix, plot_cloud
+from utils import count_trainable_params, extract_path_from_dir, save_uniqe, grf, bilinear_upsample,upsample, generate_random_matrix, plot_cloud, generate_grf
 from constants import Constants
 # names=[(1,1), (1,0.9), (1,0.8), (1,0.7), (1,0.6), (1,0.5)]
 
@@ -39,6 +39,7 @@ def generate_domains(i1,i2,j1,j2):
 #     plot_cloud(d.X,d.Y,colors[i])
 # plt.show()    
 def generate_f_g(shape, seedf):
+    
 
         f=generate_random_matrix(shape,seed=seedf)
         
@@ -67,12 +68,15 @@ def generate_data(names,  save_path, number_samples,Seed=None):
         DOMAINS.append(torch.tensor(np.hstack((d_ref.X.reshape(-1, 1), d_ref.Y.reshape(-1, 1))), dtype=torch.float32))
         
         f_temp=[]
+        
+        GRF=generate_grf(d.X, d.Y, number_samples)
         for i in range(number_samples):
+            f=GRF[i]
             
-            try:
-                f=generate_f_g(d.nx*d.ny, Seed)
-            except:
-                f=generate_f_g(d.nx*d.ny, i)
+            # try:
+            #     f=generate_f_g(d.nx*d.ny, Seed)
+            # except:
+            #     f=generate_f_g(d.nx*d.ny, i)
             f_ref[d.valid_indices]=f
             f_temp.append(torch.tensor(f_ref, dtype=torch.float32))
             
@@ -93,15 +97,16 @@ def generate_data(names,  save_path, number_samples,Seed=None):
     save_uniqe(MASKS ,save_path+'masks/')
     save_uniqe(DOMAINS ,save_path+'domains/')
     save_uniqe(F ,save_path+'functions/')
-    return X,Y,F,DOMAINS, MASKS        
+    return 1      
 
 # 
 
 if __name__=='__main__':
     pass
 # if False: 400 is good for n=20
-    X,Y,F,DOMAINS, MASKS  =generate_data(names, Constants.train_path, number_samples=300, Seed=None)
-    X,Y,F,DOMAINS, MASKS  =generate_data([names[0]],Constants.test_path,number_samples=1, Seed=800)
+    generate_data([names[0]],Constants.test_path,number_samples=1, Seed=800)
+    generate_data(names, Constants.train_path, number_samples=300, Seed=None)
+
 
 
 # fig,ax=plt.subplots()

@@ -636,3 +636,14 @@ def evaluate_model(f,valid_indices,d,d_super,NN,NN2,X,Y, dom,mask):
 # f=np.random.multivariate_normal(mean, cov,size=m)
 # print(np.mean(f))
 
+def generate_grf(X,Y,m):
+    n=len(X)
+    mean=np.zeros(n)
+    cov=np.zeros((n,n))
+    for i in range(n):
+        for j in range(n):
+            s1=np.array([X[i],Y[i]])
+            s2=np.array([X[j],Y[j]])
+            cov[i,j]=0.1*np.exp(-(np.linalg.norm(s1-s2))**2/(2*0.1**2))
+    
+    return np.random.multivariate_normal(mean, cov,m)

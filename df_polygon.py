@@ -17,7 +17,7 @@ def generate_f_g(shape, seedf):
         f=(f-np.mean(f))/np.std(f)
         
        
-        return f
+        return f+1
 
 def masking_coordinates(X,Y):
         xx,yy=np.meshgrid(np.linspace(0,1, Constants.n),np.linspace(0,1, Constants.n),indexing='ij')

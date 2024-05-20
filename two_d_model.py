@@ -85,10 +85,6 @@ class deeponet_f(nn.Module):
         self.trunk1=FullyConnectedLayer(2,f_shape)
         self.bias1 =fc( 3*f_shape, 1, n_layers, False)
        
-
-
-
-
     def forward(self, X):
         y,f,dom, mask=X
 
@@ -119,8 +115,46 @@ class deeponet(nn.Module):
    
             # return self.model1(X)
             return self.model1(X)+1J*self.model2(X)
-        
 
+class deeponet_f_van(nn.Module):
+    def __init__(self, dim,f_shape, domain_shape,  p):
+        super().__init__()
+
+        n_layers = 4
+        self.n = p
+
+        self.attention1=SelfAttention2(input_dims=[1,1,1], hidden_dim=1)
+
+        
+        self.branch1=FullyConnectedLayer(f_shape,f_shape)
+        self.trunk1=FullyConnectedLayer(2,f_shape)
+        self.bias1 =fc( 2*f_shape, 1, n_layers, False)
+       
+    def forward(self, X):
+        y,f,dom, mask=X
+
+        branch1= self.branch1(self.attention1(f.unsqueeze(-1),f.unsqueeze(-1),f.unsqueeze(-1), mask).squeeze(-1))
+
+        # trunk = self.attention2(y.unsqueeze(-1),dom,y.unsqueeze(-1)).squeeze(-1)
+        trunk=self.trunk1(y)
+        bias = torch.squeeze(self.bias1(torch.cat((branch1,trunk),dim=1)))
+
+        # return torch.sum(branch1*branch2*trunk, dim=-1, keepdim=False)+bias
+        return torch.sum(branch1*trunk, dim=-1, keepdim=False)+bias
+        
+class deeponet_van(nn.Module):  
+        def __init__(self, dim,f_shape, domain_shape,  p):
+            super().__init__()
+            self.dim=dim
+            self.p=p
+            self.model1=deeponet_f_van(dim,f_shape, domain_shape,  p)
+            self.model2=deeponet_f_van(dim,f_shape, domain_shape,  p)
+            
+        def forward(self, X):
+   
+            # return self.model1(X)
+            return self.model1(X)+1J*self.model2(X)
+        
 from transformer import EncoderLayer, EncoderLayer2
 class Transformer(nn.Module):
     def __init__(self,f_shape, p):

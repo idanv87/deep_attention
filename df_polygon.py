@@ -136,7 +136,7 @@ def generate_rect2(N):
     
     d_ref=domain(np.linspace(0,1,Constants.n),np.linspace(0,1,Constants.n))
     f_ref=np.zeros(d_ref.nx*d_ref.ny)
-    d=generate_domains(0,8, 0,8)
+    d=generate_domains(5,13, 2,10)
     # d_super=domain(np.linspace(d.x[0],d.x[-1],N), np.linspace(d.y[0],d.y[-1],N))
     # f=np.sin(d_super.X)
     f=generate_f_g(N**2, 500)
@@ -152,6 +152,7 @@ def generate_rect2(N):
 
 
 def generate_example_2():  
+    # X_ref, Y_ref domain points contained in the referwbce domain
     x1=np.linspace(0,1/2,8) 
     y1=np.linspace(0,1,15)
     x2=np.linspace(8/14,1,7) 
@@ -163,8 +164,8 @@ def generate_example_2():
     
     
     
-    d_ref=domain(np.linspace(0,1,Constants.n),np.linspace(0,1,Constants.n))
-    f_ref=np.zeros(d_ref.nx*d_ref.ny)
+    # d_ref=domain(np.linspace(0,1,Constants.n),np.linspace(0,1,Constants.n))
+    # f_ref=np.zeros(d_ref.nx*d_ref.ny)
     x=np.linspace(0,1,29)
     y=np.linspace(0,1,29)
     x1=np.linspace(x[0],x[14],15) 
@@ -252,6 +253,54 @@ def generate_example_2():
     
     return csr_matrix(D)+Constants.k*scipy.sparse.identity(D.shape[0]),f_ref,f,dom,mask, X,Y, X_ref, Y_ref, valid_indices
 
+
+def generate_obstacle():  
+    d_ref=domain(np.linspace(0,1,Constants.n),np.linspace(0,1,Constants.n))
+    obs=generate_domains(3,11, 9,12)
+    
+    
+    X_ref=[]
+    Y_ref=[]
+    good_ind=[]
+    for i in range(len(d_ref.X)):
+        dist=[abs(d_ref.X[i]-obs.X[j])+abs(d_ref.Y[i]-obs.Y[j]) for j in range(len(obs.X))]
+        if np.min(dist)>1e-10:
+            X_ref.append(d_ref.X[i])
+            Y_ref.append(d_ref.Y[i])
+            good_ind.append(i)   
+    D=d_ref.D.todense()[good_ind,:][:,good_ind]
+    valid_indices, non_valid_indices=masking_coordinates(X_ref, Y_ref) 
+    f_ref=np.zeros(d_ref.nx*d_ref.ny)
+    mask = np.zeros((len(f_ref),len(f_ref)))
+    mask[:, non_valid_indices] = float('-inf')  
+    mask=torch.tensor(mask, dtype=torch.float32)
+    dom=torch.tensor(np.hstack((d_ref.X.reshape(-1, 1), d_ref.Y.reshape(-1, 1))), dtype=torch.float32)
+    f=generate_f_g(len(X_ref), 1)
+    func=interpolation_2D(X_ref,Y_ref,f)
+    f_ref[valid_indices]=func(X_ref,Y_ref)
+    X=X_ref
+    Y=Y_ref
+    return csr_matrix(D)+Constants.k*scipy.sparse.identity(D.shape[0]),f_ref,f,dom,mask, X,Y, X_ref, Y_ref, valid_indices
+
+
+    
+    # plt.scatter(d_ref.X,d_ref.Y, color='black')    
+    # plt.scatter(X_ref,Y_ref, color='red') 
+    # plt.show() 
+  
+
+        
+    # k=0
+    # for i in range(len(X_ref)):
+    #     plt.scatter(X_ref[i],Y_ref[i])
+    #     plt.text(X_ref[i],Y_ref[i],str(k))
+    #     k+=1
+                
+
+    # plt.show()   
+    
+    
+generate_obstacle()
 # A,f_ref,f,dom,mask, X,Y, X_ref, Y_ref, valid_indices=generate_example_2()
 
 

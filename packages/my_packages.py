@@ -301,10 +301,8 @@ def gs_new(A):
     for i in range(n):
         L[i,i]=1/A[i,i] 
          
-
-    U=A-L 
     # x0=scipy.linalg.solve(L,f-U@x0)
-    l,v=scipy.sparse.linalg.eigs(identity(n)-L@A, k=10,which='LM')
+    l,v=scipy.sparse.linalg.eigs(identity(n)-L@A, k=3,which='LR')
     return l, v
     
 # A=np.random.rand(10,10)

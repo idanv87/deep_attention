@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 from constants import Constants
 import torch
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+from utils import generate_grf
+from main import generate_domains
 path='/Users/idanversano/Documents/project_geo_deeponet/tex/figures/attention_deeponet/'
 x0=np.linspace(0,1,15)
 y0=np.linspace(0,1,15)
@@ -151,5 +153,104 @@ def fig6():
     # Show the plots
     plt.show()
     
-fig6()
+def fig7():
+    fig, ax1 = plt.subplots(1, 1, figsize=(4, 4)) 
+    datags=torch.load(Constants.outputs_path+'output4.pt')
+    data=torch.load(Constants.outputs_path+'output5.pt')
+    for i in range(1,len(data['err'])):
+        ax1.scatter(i,np.log(data['err'][i]),color='black', s=1)
+        ax1.scatter(i,np.log(datags['err'][i]),color='red', s=1)
+    ax1.text(300, -15, 'Hints', fontsize=10, color='black')
+    ax1.text(5, 0.5, 'GS', fontsize=10, color='red')    
+    left, bottom, width, height = [0.2, 0.2, 0.3, 0.3]
+    ax2 = fig.add_axes([left, bottom, width, height])  
+    ax2.scatter(X0, Y0, color='black',s=10,facecolors='none', edgecolor='black')  
+    ax2.scatter(data['X'], data['Y'], color='black',s=10)  
+    ax2.set_xticks([])
+    ax2.set_yticks([])
 
+    ax1.set_xlabel('iter.')
+    ax1.set_ylabel('log-err')
+    ax1.axis('tight')    
+    ax1.set_title('J='+str(data['J'])+', '+'alpha='+str(data['alpha']))
+    plt.tight_layout() 
+    plt.savefig(path+'fig7.eps', format='eps', bbox_inches='tight', dpi=600)  # Save the figure as an image file
+
+    plt.show() 
+
+def fig8():
+    fig, ax1 = plt.subplots(1, 1, figsize=(4, 4)) 
+    datags=torch.load(Constants.outputs_path+'output6.pt')
+    data=torch.load(Constants.outputs_path+'output7.pt')
+    for i in range(1,len(data['err'])):
+        ax1.scatter(i,np.log(data['err'][i]),color='black', s=1)
+        ax1.scatter(i,np.log(datags['err'][i]),color='red', s=1)
+    ax1.text(300, -10, 'Hints', fontsize=10, color='black')
+    ax1.text(30, 0, 'GS', fontsize=10, color='red')    
+    left, bottom, width, height = [0.2, 0.2, 0.3, 0.3]
+    ax2 = fig.add_axes([left, bottom, width, height])  
+    ax2.scatter(X0, Y0, color='black',s=10,facecolors='none', edgecolor='black')  
+    ax2.scatter(data['X'], data['Y'], color='black',s=10)  
+    ax2.set_xticks([])
+    ax2.set_yticks([])
+
+    ax1.set_xlabel('iter.')
+    ax1.set_ylabel('log-err')
+    ax1.axis('tight')    
+    ax1.set_title('J='+str(data['J'])+', '+'alpha='+str(data['alpha']))
+    plt.tight_layout() 
+    plt.savefig(path+'fig8.eps', format='eps', bbox_inches='tight', dpi=600)  # Save the figure as an image file
+
+    plt.show() 
+
+def fig9():
+    fig, ax1 = plt.subplots(1, 1, figsize=(4, 4)) 
+    datags=torch.load(Constants.outputs_path+'output8.pt')
+    data=torch.load(Constants.outputs_path+'output9.pt')
+    for i in range(1,len(data['err'])):
+        ax1.scatter(i,np.log(data['err'][i]),color='black', s=1)
+        ax1.scatter(i,np.log(datags['err'][i]),color='red', s=1)
+    ax1.text(300, -20, 'Hints', fontsize=10, color='black')
+    ax1.text(200, -8, 'GS', fontsize=10, color='red')    
+    left, bottom, width, height = [0.2, 0.2, 0.3, 0.3]
+    ax2 = fig.add_axes([left, bottom, width, height])  
+    ax2.scatter(X0, Y0, color='black',s=10,facecolors='none', edgecolor='black')  
+    ax2.scatter(data['X'], data['Y'], color='black',s=10)  
+    ax2.set_xticks([])
+    ax2.set_yticks([])
+
+    ax1.set_xlabel('iter.')
+    ax1.set_ylabel('log-err')
+    ax1.axis('tight')    
+    ax1.set_title('J='+str(data['J'])+', '+'alpha='+str(data['alpha']))
+    plt.tight_layout() 
+    plt.savefig(path+'fig9.eps', format='eps', bbox_inches='tight', dpi=600)  # Save the figure as an image file
+
+    plt.show() 
+
+def fig10():
+    fig, ax1 = plt.subplots(1, 1, figsize=(4, 4)) 
+    datags=torch.load(Constants.outputs_path+'output10.pt')
+    data=torch.load(Constants.outputs_path+'output11.pt')
+    for i in range(1,len(data['err'])):
+        ax1.scatter(i,np.log(data['err'][i]),color='black', s=1)
+        ax1.scatter(i,np.log(datags['err'][i]),color='red', s=1)
+    ax1.text(200, -6, 'Hints', fontsize=10, color='black')
+    ax1.text(100, 2, 'GS', fontsize=10, color='red')    
+    left, bottom, width, height = [0.2, 0.2, 0.3, 0.3]
+    ax2 = fig.add_axes([left, bottom, width, height])  
+    ax2.scatter(X0, Y0, color='black',s=10,facecolors='none', edgecolor='black')  
+    ax2.scatter(data['X'], data['Y'], color='black',s=10)  
+    ax2.set_xticks([])
+    ax2.set_yticks([])
+
+    ax1.set_xlabel('iter.')
+    ax1.set_ylabel('log-err')
+    ax1.axis('tight')    
+    ax1.set_title('J='+str(data['J'])+', '+'alpha='+str(data['alpha']))
+    plt.tight_layout() 
+    plt.savefig(path+'fig10.eps', format='eps', bbox_inches='tight', dpi=600)  # Save the figure as an image file
+
+    plt.show() 
+
+fig6() 

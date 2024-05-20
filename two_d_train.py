@@ -28,11 +28,11 @@ from utils import  save_plots, count_trainable_params, extract_path_from_dir
 from constants import Constants
 from packages.schedualer import LRScheduler, EarlyStopping, cyclical_lr, SaveBestModel
 from utils import norms
-from two_d_model import deeponet
+from two_d_model import deeponet, deeponet_van
 if __name__=="__main__":
     n=Constants.n
-    model=deeponet(dim=2,f_shape=n**2, domain_shape=2, p=80) 
-    submodel=model.model1.attention2
+    model=deeponet_van(dim=2,f_shape=n**2, domain_shape=2, p=80) 
+
     
     train_data=extract_path_from_dir(Constants.train_path+'data/')
     train_masks=extract_path_from_dir(Constants.train_path+'masks/')

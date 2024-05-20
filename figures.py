@@ -57,6 +57,7 @@ def fig2():
     ax1.set_xlabel('iter.')
     ax1.set_ylabel('log-err')
     ax1.axis('tight')    
+    ax1.set_title('J='+str(data['J'])+', '+'alpha='+str(data['alpha']))
     plt.tight_layout() 
     plt.savefig(path+'fig2.eps', format='eps', bbox_inches='tight', dpi=600)  # Save the figure as an image file
 
@@ -67,6 +68,7 @@ def fig3():
     data=torch.load(Constants.outputs_path+'output2.pt')
     for i in range(1,len(data['err'])):
         ax1.scatter(i,np.log(data['err'][i]),color='black', s=1)
+    ax1.set_title('J='+str(data['J'])+', '+'alpha='+str(data['alpha']))    
     left, bottom, width, height = [0.2, 0.2, 0.3, 0.3]
     ax2 = fig.add_axes([left, bottom, width, height])  
     ax2.scatter(X0, Y0, color='red',s=10,facecolors='none', edgecolor='black')  
@@ -138,7 +140,8 @@ def fig6():
     ax2.set_xlabel('iter.')
     ax2.set_ylabel('log-err')
     ax1.axis('tight')  
-    ax2.axis('tight')            
+    ax2.axis('tight')    
+    ax2.set_title('J='+str(data['J'])+', '+'alpha='+str(data['alpha']))        
     
     # Adjust layout and save the figure
     plt.tight_layout()  # Adjust subplot spacing
@@ -148,5 +151,5 @@ def fig6():
     # Show the plots
     plt.show()
     
-fig6()    
+fig6()
 

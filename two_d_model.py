@@ -119,6 +119,7 @@ class deeponet(nn.Module):
    
             # return self.model1(X)
             return self.model1(X)+1J*self.model2(X)
+        
 
 from transformer import EncoderLayer, EncoderLayer2
 class Transformer(nn.Module):

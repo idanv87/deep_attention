@@ -136,19 +136,19 @@ def generate_rect2(N):
     
     d_ref=domain(np.linspace(0,1,Constants.n),np.linspace(0,1,Constants.n))
     f_ref=np.zeros(d_ref.nx*d_ref.ny)
-    d=generate_domains(5,12, 5,12)
-    d_super=domain(np.linspace(d.x[0],d.x[-1],N), np.linspace(d.y[0],d.y[-1],N))
+    d=generate_domains(0,8, 0,8)
+    # d_super=domain(np.linspace(d.x[0],d.x[-1],N), np.linspace(d.y[0],d.y[-1],N))
     # f=np.sin(d_super.X)
     f=generate_f_g(N**2, 500)
-    func=interpolation_2D(d_super.X,d_super.Y,f)
+    func=interpolation_2D(d.X,d.Y,f)
     
     f_ref[d.valid_indices]=func(d.X,d.Y)
     mask = np.zeros((len(f_ref),len(f_ref)))
     mask[:, d.non_valid_indices] = float('-inf')  
    
-    A,G=d_super.solver(f.reshape((N,N)))
+    A,G=d.solver(f.reshape((N,N)))
     dom=np.hstack((d_ref.X.reshape(-1, 1), d_ref.Y.reshape(-1, 1)))
-    return A, f_ref,f,dom,mask, d_super.X, d_super.Y, d.valid_indices, d_super, d   
+    return A, f_ref,f,dom,mask, d.X, d.Y, d.valid_indices
 
 
 def generate_example_2():  

@@ -88,7 +88,7 @@ def NN( F, X, Y, dom,mask):
 A,f_ref,f,dom,mask, X,Y, valid_indices=generate_example()
 # A,f_ref,f,dom,mask, X,Y, valid_indices=generate_rect()
 
-# A,f_ref,f,dom,mask, X,Y, valid_indices, d_super, d=generate_rect2(7)
+A,f_ref,f,dom,mask, X,Y, valid_indices=generate_rect2(8)
 A,f_ref,f,dom,mask, X,Y, X_ref, Y_ref, valid_indices=generate_example_2()
 x0=(f+1J*f)*0.001
 
@@ -113,11 +113,11 @@ b=f
 err=[]
 color=[]
 # l,v=gs_new(A.todense())
-J=2
+
 # print((1/np.linalg.norm(l[0]**(J+1)))*np.linalg.norm(evaluate_model(v[:,0]*l[0]**J,valid_indices,d,d_super,NN,NN2,X,Y, dom,mask)))
-def hints(A,b,x0):
+def hints(A,b,x0, J, alpha):
     for k in range(3000):
-        if (k+1)%20==0:
+        if (k+1)%J==0:
             # corr=evaluate_model(-A@x0+b,valid_indices,NN,NN2,X,Y, dom,mask)
             
             f_real=(-A@x0+b).real
@@ -129,8 +129,8 @@ def hints(A,b,x0):
             f_imag=np.array(func_imag(X_ref,Y_ref))
             
 
-            s_real=np.std(f_real)/0.2
-            s_imag=np.std(f_imag)/0.2
+            s_real=np.std(f_real)/alpha
+            s_imag=np.std(f_imag)/alpha
             f_ref_real=np.zeros(Constants.n**2)
             f_ref_imag=np.zeros(Constants.n**2)
             
@@ -154,10 +154,9 @@ def hints(A,b,x0):
             print(np.linalg.norm(A@x0-b)/np.linalg.norm(b))
             print(k)
         err.append(np.linalg.norm(A@x0-b)/np.linalg.norm(b))
-        if err[-1]<1e-14:
+        if err[-1]<1e-13:
             break
-    return err, color    
-err, color=hints(A,b,x0)     
-# torch.save([err,color], Constants.outputs_path+'output1.pt')
-torch.save({'X':X, 'Y':Y, 'err':err}, Constants.outputs_path+'output3.pt')
+    return err, color, J, alpha    
+err, color, J, alpha, =hints(A,b,x0,J=20, alpha=0.5)     
+torch.save({'X':X, 'Y':Y, 'err':err,'J':J, 'alpha':alpha}, Constants.outputs_path+'output3.pt')
 

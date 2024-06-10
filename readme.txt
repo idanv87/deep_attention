@@ -3,7 +3,7 @@ clone the git repository with version6 to '/**/deep_attention' using: git clone 
 got to the  deep_attention/constants.py    and replace the line '/Users/idanversano/Documents/project_geo_deeponet/deep_attention/' with '/**/deep_attention'
 
 
+cd to '/**/deep_attention'
+python main.py create data
 
-deep_attention/main.py create data
-
-deep_attnetion/two_d_train.py starts training
+python two_d_train.py starts training

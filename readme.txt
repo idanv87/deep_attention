@@ -4,6 +4,7 @@ got to the  deep_attention/constants.py    and replace the line '/Users/idanvers
 
 
 cd to '/**/deep_attention'
-python main.py create data
+
+python main.py create data  and store in two folders: /**/deep_attention/train_set/ ,  /**/deep_attention/test_set/
 
 python two_d_train.py starts training

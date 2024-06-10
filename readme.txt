@@ -1,4 +1,5 @@
-clone the git repository with version6 to '/**/deep_attention'
+
+clone the git repository with version6 to '/**/deep_attention' using: git clone -b version6 git@github.com:user/myproject.git
 deep_attention folder  should contain the folder src
 got to the file src/constants.py    and replace the line '/Users/idanversano/Documents/project_geo_deeponet/deep_attention/' with '/**/deep_attention'
 

@@ -16,6 +16,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import numpy as np
+import wandb
 
 from two_d_data_set import create_loader, SonarDataset
 
@@ -28,10 +29,14 @@ from utils import  save_plots, count_trainable_params, extract_path_from_dir
 from constants import Constants
 from packages.schedualer import LRScheduler, EarlyStopping, cyclical_lr, SaveBestModel
 from utils import norms
-from two_d_model import deeponet, deeponet_van
+from two_d_model import deeponet
 if __name__=="__main__":
     n=Constants.n
-    model=deeponet_van(dim=2,f_shape=n**2, domain_shape=2, p=80) 
+    model=deeponet(dim=2,f_shape=n**2, domain_shape=2, p=80) 
+    total_params = sum(p.numel() for p in model.parameters())
+    print(f"{total_params:,} total parameters.")
+    total_trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(f"{total_trainable_params:,} training parameters.")
 
     
     train_data=extract_path_from_dir(Constants.train_path+'data/')
@@ -99,13 +104,26 @@ if __name__=="__main__":
     isExist = os.path.exists(experment_path)
     if not isExist:
         os.makedirs(experment_path)  
+# 2024.06.04.22.02.41best_model.pth
 
-    # best_model=torch.load(Constants.path+'runs/'+'2024.05.02.23.05.48best_model.pth')
+    # best_model=torch.load(Constants.path+'runs/'+'2024.05.16.19.26.50best_model.pth')
     # model.load_state_dict(best_model['model_state_dict'])
 
 
     from torch.utils.tensorboard import SummaryWriter
     writer = SummaryWriter(experment_path)
+    wandb.init(
+    # set the wandb project where this run will be logged
+    project="deeponet",
+
+    # track hyperparameters and run metadata
+    config={
+    "learning_rate": 1e-4,
+    "architecture": "deeponet",
+    "dataset": "L-shpae,8, subsquares",
+    "epochs": 6000,
+    }
+)
 
 
     lr = 0.0001
@@ -124,10 +142,7 @@ if __name__=="__main__":
     device = Constants.device
 
     # total parameters and trainable parameters
-    total_params = sum(p.numel() for p in model.parameters())
-    print(f"{total_params:,} total parameters.")
-    total_trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-    print(f"{total_trainable_params:,} training parameters.")
+
 
 
 
@@ -339,6 +354,10 @@ if __name__=="__main__":
         print(f"Val Realtive L2  Error: {val_epoch_acc:.4e}")
         print(f"Test Realtive L2  Error: {test_epoch_acc:.4e}")
         print(f"Learning rate: {optimizer.param_groups[0]['lr']:.4e}")
+        wandb.log({"train_loss":train_epoch_loss,
+                   "val_loss":val_epoch_loss,
+                   "test_loss":test_epoch_loss,
+                   "lr": optimizer.param_groups[0]['lr']})
     end = time.time()
     print(f"Training time: {(end-start)/60:.3f} minutes")
 
@@ -348,6 +367,7 @@ if __name__=="__main__":
     print("TRAINING COMPLETE")
 
     try:
+        wandb.finish()
         writer.close()
     except:
         pass    

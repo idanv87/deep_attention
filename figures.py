@@ -252,5 +252,35 @@ def fig10():
     plt.savefig(path+'fig10.eps', format='eps', bbox_inches='tight', dpi=600)  # Save the figure as an image file
 
     plt.show() 
+    
+def fig11():
+    fig, (ax1,ax2) = plt.subplots(1, 2, figsize=(8, 4)) 
+    spec_single=torch.load(Constants.outputs_path+'spec_single.pt')        
+    spec_mult=torch.load(Constants.outputs_path+'spec_mult.pt')
 
-fig6() 
+    ax1.plot(np.log(spec_single['low'][:20]),color='black', label=r'$ \mathcal{N}$')
+    ax1.plot(np.log(spec_mult['low'])[:20],color='red', linestyle='dashed', label= r'$ \mathcal{N}_{mult}$')
+    
+    ax2.plot(np.log(spec_single['high'][:20]),color='black', label=r'$ \mathcal{N}$')
+    ax2.plot(np.log(spec_mult['high'])[:20],color='red', linestyle='dashed',label=r'$ \mathcal{N}_{mult}$')
+    ax1.legend()
+    ax2.legend()
+    ax2.set_title('smallest mode')
+    ax1.set_title('highest mode')
+    ax1.set_xlabel('iter.')
+    ax1.set_ylabel('log-err')
+    ax2.set_xlabel('iter.')
+    plt.suptitle('Error of Hints by modes', fontsize=16)
+    plt.tight_layout() 
+    plt.savefig(path+'fig11.eps', format='eps', bbox_inches='tight', dpi=600)  # Save the figure as an image file
+
+    plt.show() 
+
+
+fig11()
+
+
+
+# plt.plot(spec_single['low'][:40])  
+# plt.plot(spec_mult['low'][:40],color='red')
+# plt.show()

@@ -141,6 +141,7 @@ class deeponet_f_van(nn.Module):
 
         # return torch.sum(branch1*branch2*trunk, dim=-1, keepdim=False)+bias
         return torch.sum(branch1*trunk, dim=-1, keepdim=False)+bias
+        # return torch.sum(branch1*trunk, dim=-1, keepdim=False)
         
 class deeponet_van(nn.Module):  
         def __init__(self, dim,f_shape, domain_shape,  p):

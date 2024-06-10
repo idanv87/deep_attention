@@ -19,12 +19,17 @@ import time
 
 from utils import count_trainable_params, extract_path_from_dir, save_uniqe, grf, bilinear_upsample,upsample, generate_random_matrix, plot_cloud, generate_grf
 from constants import Constants
-# names=[(1,1), (1,0.9), (1,0.8), (1,0.7), (1,0.6), (1,0.5)]
 
-names=[]
-for k in range(1,2):
-    for l in range(1,2):
-        names.append( (0,int(Constants.n/k),0,int(Constants.n/l)) )
+                                                                      
+names=[(0,8,0,8)
+       ,(1,9,0,8),(2,10,0,8),
+(3,11,0,8),(4,12,0,8),(5,13,0,8),(6,14,0,8),(7,15,0,8)]
+test_names=[(0,15,0,8)]
+# names=[]
+# for k in range(1,4):
+#     for l in range(1,4):
+#         names.append( (0,int(15/k),0,int(15/l)) )
+
 
             
 def generate_domains(i1,i2,j1,j2):
@@ -51,13 +56,18 @@ def generate_f_g(shape, seedf):
        
         return f+1
     
-def generate_data(names,  save_path, number_samples,Seed=None):
+def generate_data(names,  save_path, number_samples,Seed):
     X=[]
     Y=[]
     MASKS=[]
     F=[]
     DOMAINS=[]
     for l,dom in enumerate(names):
+        print(l)
+        # if l==0:
+        #     number_samples=400
+        # else:
+        #     number_samples=100    
         d_ref=domain(np.linspace(0,1,Constants.n),np.linspace(0,1,Constants.n))
         f_ref=np.zeros(d_ref.nx*d_ref.ny)
         d=generate_domains(dom[0],dom[1], dom[2],dom[3])
@@ -69,14 +79,17 @@ def generate_data(names,  save_path, number_samples,Seed=None):
         
         f_temp=[]
         
-        GRF=generate_grf(d.X, d.Y, number_samples)
+        GRF=generate_grf(d_ref.X, d_ref.Y, n_samples=number_samples,l=0.1, seed=Seed)
+        # GRF=generate_grf(d.X, d.Y, n_samples=number_samples, seed=Seed)
         for i in range(number_samples):
-            f=GRF[i]
+            # f=GRF[i]
+            f=GRF[i][d.valid_indices]
             
             # try:
             #     f=generate_f_g(d.nx*d.ny, Seed)
             # except:
             #     f=generate_f_g(d.nx*d.ny, i)
+            # f_ref[d.valid_indices]=f
             f_ref[d.valid_indices]=f
             f_temp.append(torch.tensor(f_ref, dtype=torch.float32))
             
@@ -104,8 +117,9 @@ def generate_data(names,  save_path, number_samples,Seed=None):
 if __name__=='__main__':
     pass
 # if False: 400 is good for n=20
+    generate_data(names, Constants.train_path, number_samples=300, Seed=1)
     generate_data([names[0]],Constants.test_path,number_samples=1, Seed=800)
-    generate_data(names, Constants.train_path, number_samples=300, Seed=None)
+    
 
 
 

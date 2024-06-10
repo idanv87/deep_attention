@@ -16,8 +16,9 @@ def generate_f_g(shape, seedf):
         
         f=(f-np.mean(f))/np.std(f)
         
+        
        
-        return f+1
+        return f
 
 def masking_coordinates(X,Y):
         xx,yy=np.meshgrid(np.linspace(0,1, Constants.n),np.linspace(0,1, Constants.n),indexing='ij')
@@ -35,7 +36,7 @@ def masking_coordinates(X,Y):
                 masked_indices.append(j)    
         return valid_indices, masked_indices     
         
-def generate_example():  
+def generate_example(sigma=0.1,l=0.2,mean=0):  
     x1=np.linspace(0,1/2,8) 
     y1=np.linspace(0,1,15)
     X1,Y1=np.meshgrid(x1,y1,indexing='ij')
@@ -112,7 +113,8 @@ def generate_example():
     mask=torch.tensor(mask, dtype=torch.float32)
     dom=torch.tensor(np.hstack((d_ref.X.reshape(-1, 1), d_ref.Y.reshape(-1, 1))), dtype=torch.float32)
     
-    f=generate_f_g(len(X), 1)
+    # f=generate_f_g(len(X), 1)
+    f=generate_grf(X,Y,1,sigma,l,mean)[0]
 
     f_ref[valid_indices]=f
     # f_ref=torch.tensor(f_ref, dtype=torch.float32)
@@ -123,7 +125,7 @@ def generate_rect():
     
     d_ref=domain(np.linspace(0,1,Constants.n),np.linspace(0,1,Constants.n))
     f_ref=np.zeros(d_ref.nx*d_ref.ny)
-    d=generate_domains(0,15, 0,15)
+    d=generate_domains(0,8, 0,15)
     f=generate_f_g(d.nx*d.ny, 500)
     f_ref[d.valid_indices]=f
     mask = np.zeros((len(f_ref),len(f_ref)))
@@ -136,9 +138,9 @@ def generate_rect2(N):
     
     d_ref=domain(np.linspace(0,1,Constants.n),np.linspace(0,1,Constants.n))
     f_ref=np.zeros(d_ref.nx*d_ref.ny)
-    d=generate_domains(5,13, 2,10)
-    # d_super=domain(np.linspace(d.x[0],d.x[-1],N), np.linspace(d.y[0],d.y[-1],N))
-    # f=np.sin(d_super.X)
+    d=generate_domains(0,8, 0,8)
+    # d=generate_domains(0,15, 0,15)
+
     f=generate_f_g(N**2, 500)
     func=interpolation_2D(d.X,d.Y,f)
     
@@ -283,7 +285,95 @@ def generate_obstacle():
     return csr_matrix(D)+Constants.k*scipy.sparse.identity(D.shape[0]),f_ref,f,dom,mask, X,Y, X_ref, Y_ref, valid_indices
 
 
+def generate_obstacle2(N):  
+    d0=domain(np.linspace(0,1,Constants.n),np.linspace(0,1,Constants.n))
+    d_out=domain(np.linspace(0,1,N),np.linspace(0,1,N))
+    # obs=domain(d_out.x[int (N/4):int (3*N/4)],d_out.y[int (N/4):int (3*N/4)])
+    # obs=domain(d_out.x[int (N/10)+1:int (9*N/10)+1],d_out.y[int(N/10)+1:int (9*N/10)+1])
+    obs=domain(d_out.x[int (N/4)+1:int (3*N/4)+1],d_out.y[int(N/2)+1:int (7*N/10)+1])
     
+    
+    X=[]
+    Y=[]
+    good_ind=[]
+    for i in range(len(d_out.X)):
+        dist=[abs(d_out.X[i]-obs.X[j])+abs(d_out.Y[i]-obs.Y[j]) for j in range(len(obs.X))]
+        if np.min(dist)>1e-10:
+            X.append(d_out.X[i])
+            Y.append(d_out.Y[i])
+            good_ind.append(i)   
+    D=d_out.D.todense()[good_ind,:][:,good_ind]
+    valid_indices, non_valid_indices=masking_coordinates(X, Y) 
+    
+    f_ref=np.zeros(d0.nx*d0.ny)
+    mask = np.zeros((len(f_ref),len(f_ref)))
+    mask[:, non_valid_indices] = float('-inf')  
+    mask=torch.tensor(mask, dtype=torch.float32)
+    dom=torch.tensor(np.hstack((d0.X.reshape(-1, 1), d0.Y.reshape(-1, 1))), dtype=torch.float32)
+    
+
+    f=generate_f_g(len(X), 1)
+    func=interpolation_2D(X,Y,f)
+    X_ref=[]
+    Y_ref=[]
+    for i in range(len(d0.X)):
+        dist=[abs(d0.X[i]-obs.X[j])+abs(d0.Y[i]-obs.Y[j]) for j in range(len(obs.X))]
+        if np.min(dist)>1e-10:
+            X_ref.append(d0.X[i])
+            Y_ref.append(d0.Y[i])
+            
+    f_ref[valid_indices]=func(X_ref,Y_ref)
+
+    return csr_matrix(D)+Constants.k*scipy.sparse.identity(D.shape[0]),f_ref,f,dom,mask, X,Y, X_ref, Y_ref, valid_indices
+
+
+def generate_two_obstacles(N=29):  
+    d0=domain(np.linspace(0,1,Constants.n),np.linspace(0,1,Constants.n))
+    d_out=domain(np.linspace(0,1,N),np.linspace(0,1,N))
+    # obs=domain(d_out.x[int (N/4):int (3*N/4)],d_out.y[int (N/4):int (3*N/4)])
+    # obs=domain(d_out.x[int (N/10)+1:int (9*N/10)+1],d_out.y[int(N/10)+1:int (9*N/10)+1])
+    obs1=domain(d_out.x[int (1*N/5)+1:int (2*N/5)+1],d_out.y[int(2*N/4)+1:int (3*N/4)+1])
+    obs2=domain(d_out.x[int (3*N/5)+1:int (4*N/5)+1],d_out.y[int(2*N/4)+1:int (3*N/4)+1])
+    
+    
+    X=[]
+    Y=[]
+    good_ind=[]
+    for i in range(len(d_out.X)):
+        dist1=[abs(d_out.X[i]-obs1.X[j])+abs(d_out.Y[i]-obs1.Y[j]) for j in range(len(obs1.X))]
+        dist2=[abs(d_out.X[i]-obs2.X[j])+abs(d_out.Y[i]-obs2.Y[j]) for j in range(len(obs2.X))]
+        dist=dist1+dist2
+        if np.min(dist)>1e-10:
+            X.append(d_out.X[i])
+            Y.append(d_out.Y[i])
+            good_ind.append(i)   
+    D=d_out.D.todense()[good_ind,:][:,good_ind]
+    valid_indices, non_valid_indices=masking_coordinates(X, Y) 
+    
+    f_ref=np.zeros(d0.nx*d0.ny)
+    mask = np.zeros((len(f_ref),len(f_ref)))
+    mask[:, non_valid_indices] = float('-inf')  
+    mask=torch.tensor(mask, dtype=torch.float32)
+    dom=torch.tensor(np.hstack((d0.X.reshape(-1, 1), d0.Y.reshape(-1, 1))), dtype=torch.float32)
+    
+
+    f=generate_f_g(len(X), 1)
+    func=interpolation_2D(X,Y,f)
+    X_ref=[]
+    Y_ref=[]
+    for i in range(len(d0.X)):
+        dist1=[abs(d0.X[i]-obs1.X[j])+abs(d0.Y[i]-obs1.Y[j]) for j in range(len(obs1.X))]
+        dist2=[abs(d0.X[i]-obs2.X[j])+abs(d0.Y[i]-obs2.Y[j]) for j in range(len(obs2.X))]
+        dist=dist1+dist2
+        if np.min(dist)>1e-10:
+            X_ref.append(d0.X[i])
+            Y_ref.append(d0.Y[i])
+            
+    f_ref[valid_indices]=func(X_ref,Y_ref)
+
+    return csr_matrix(D)+Constants.k*scipy.sparse.identity(D.shape[0]),f_ref,f,dom,mask, X,Y, X_ref, Y_ref, valid_indices
+
+
     # plt.scatter(d_ref.X,d_ref.Y, color='black')    
     # plt.scatter(X_ref,Y_ref, color='red') 
     # plt.show() 
@@ -300,7 +390,7 @@ def generate_obstacle():
     # plt.show()   
     
     
-generate_obstacle()
+
 # A,f_ref,f,dom,mask, X,Y, X_ref, Y_ref, valid_indices=generate_example_2()
 
 

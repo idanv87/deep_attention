@@ -636,14 +636,34 @@ def evaluate_model(f,valid_indices,d,d_super,NN,NN2,X,Y, dom,mask):
 # f=np.random.multivariate_normal(mean, cov,size=m)
 # print(np.mean(f))
 
-def generate_grf(X,Y,m):
+def generate_grf(X,Y,n_samples,sigma=0.1,l=0.1,mean=0,seed=1):
+
     n=len(X)
-    mean=np.zeros(n)
+    mean=np.zeros(n)+mean
     cov=np.zeros((n,n))
     for i in range(n):
         for j in range(n):
             s1=np.array([X[i],Y[i]])
             s2=np.array([X[j],Y[j]])
-            cov[i,j]=0.1*np.exp(-(np.linalg.norm(s1-s2))**2/(2*0.1**2))
-    
-    return np.random.multivariate_normal(mean, cov,m)
+            cov[i,j]=sigma*np.exp(-(np.linalg.norm(s1-s2))**2/(2*l**2))
+    np.random.seed(seed)
+    return np.random.multivariate_normal(mean, cov, n_samples)
+
+
+
+def fft(data,nx,ny):
+    x=np.arange(nx)
+    y=np.arange(ny)
+    X,Y= np.meshgrid(x,y)
+
+    data_wo_DC= data- np.mean(data)
+
+    spectrum = np.fft.fftshift(np.fft.fft2(data)) 
+    spectrum_wo_DC = np.fft.fftshift(np.fft.fft2(data_wo_DC)) 
+
+    freqx=np.fft.fftshift(np.fft.fftfreq(nx,1))   #q(n, d=1.0)
+    freqy=np.fft.fftshift(np.fft.fftfreq(ny,1))   
+ 
+    return spectrum, freqx, freqy
+
+

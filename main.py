@@ -1,22 +1,20 @@
+import os
+import sys
+import math
+
 import numpy as np
 import scipy
 from scipy.linalg import circulant
 from scipy.sparse import  kron, identity, csr_matrix
 from scipy.stats import qmc
-import math
+
 import matplotlib.pyplot as plt
 from matplotlib import cm
-import os
-import sys
+
 import torch
 from two_d_data_set import *
 from two_d_model import  deeponet
 from test_deeponet import domain
-
-# from draft import create_data, expand_function
-# from geometry import Rect
-import time
-
 from utils import count_trainable_params, extract_path_from_dir, save_uniqe, grf, bilinear_upsample,upsample, generate_random_matrix, plot_cloud, generate_grf
 from constants import Constants
 
@@ -118,17 +116,7 @@ if __name__=='__main__':
     pass
 # if False: 400 is good for n=20
     generate_data(names, Constants.train_path, number_samples=300, Seed=1)
-    generate_data([names[0]],Constants.test_path,number_samples=1, Seed=800)
-    
-
-
-
-# fig,ax=plt.subplots()
-# for x in X:
-#     ax.plot(x[1],'r')
-# for x in X_test:
-#     ax.plot(x[1],'b')
-
+    generate_data(test_names,Constants.test_path,number_samples=1, Seed=800)
 
 else:
     pass    

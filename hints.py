@@ -25,7 +25,7 @@ from constants import Constants
 from utils import  grf, evaluate_model, generate_grf
 
 from two_d_data_set import *
-from draft import create_data, expand_function
+
 from packages.my_packages import Gauss_zeidel, interpolation_2D, gs_new
 
 from two_d_model import  deeponet, deeponet_van

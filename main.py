@@ -19,9 +19,9 @@ from utils import count_trainable_params, extract_path_from_dir, save_uniqe, grf
 from constants import Constants
 
                                                                       
-names=[(0,8,0,8)]
-#        ,(1,9,0,8),(2,10,0,8),
-# (3,11,0,8),(4,12,0,8),(5,13,0,8),(6,14,0,8),(7,15,0,8)]
+names=[(0,8,0,8)
+       ,(1,9,0,8),(2,10,0,8),
+(3,11,0,8),(4,12,0,8),(5,13,0,8),(6,14,0,8),(7,15,0,8)]
 test_names=[(0,15,0,8)]
 # names=[]
 # for k in range(1,4):

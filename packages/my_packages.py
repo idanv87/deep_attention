@@ -9,7 +9,7 @@ from tabulate import tabulate
 import scipy
 from shapely.geometry import Polygon as poly
 from scipy.sparse import csr_matrix, kron, identity
-import shapely.plotting
+
 
 class norms:
     def __init__(self): 

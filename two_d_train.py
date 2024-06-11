@@ -354,10 +354,10 @@ if __name__=="__main__":
         print(f"Val Realtive L2  Error: {val_epoch_acc:.4e}")
         print(f"Test Realtive L2  Error: {test_epoch_acc:.4e}")
         print(f"Learning rate: {optimizer.param_groups[0]['lr']:.4e}")
-        wandb.log({"train_loss":train_epoch_loss,
-                   "val_loss":val_epoch_loss,
-                   "test_loss":test_epoch_loss,
-                   "lr": optimizer.param_groups[0]['lr']})
+        # wandb.log({"train_loss":train_epoch_loss,
+        #            "val_loss":val_epoch_loss,
+        #            "test_loss":test_epoch_loss,
+        #            "lr": optimizer.param_groups[0]['lr']})
     end = time.time()
     print(f"Training time: {(end-start)/60:.3f} minutes")
 

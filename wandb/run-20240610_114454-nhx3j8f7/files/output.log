@@ -1,9 +1,0 @@
-/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/site-packages/torch/optim/lr_scheduler.py:28: UserWarning: The verbose parameter is deprecated. Please use get_last_lr() to access the learning rate.
-  warnings.warn("The verbose parameter is deprecated. Please use get_last_lr() "
-  1%|▊                                                                                                          | 46/6144 [00:01<03:21, 30.33it/s]
-Epoch 1 of 6000
-number of trainable parameters: 551162
-
-
-
-

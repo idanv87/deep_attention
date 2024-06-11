@@ -13,7 +13,7 @@ from matplotlib import cm
 
 import torch
 from two_d_data_set import *
-from two_d_model import  deeponet
+
 from test_deeponet import domain
 from utils import count_trainable_params, extract_path_from_dir, save_uniqe, grf, bilinear_upsample,upsample, generate_random_matrix, plot_cloud, generate_grf
 from constants import Constants

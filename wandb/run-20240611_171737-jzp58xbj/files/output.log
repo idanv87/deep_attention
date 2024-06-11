@@ -1,0 +1,35 @@
+/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/site-packages/torch/optim/lr_scheduler.py:28: UserWarning: The verbose parameter is deprecated. Please use get_last_lr() to access the learning rate.
+  warnings.warn("The verbose parameter is deprecated. Please use get_last_lr() "
+  6%|██████▏                                                                                                     | 11/192 [00:01<00:20,  8.74it/s]
+Epoch 1 of 6000
+number of trainable parameters: 551162
+
+
+
+
+
+
+
+
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 192/192 [00:19<00:00,  9.80it/s]
+
+100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 48/48 [00:03<00:00, 14.80it/s]
+2it [00:00, 18.24it/s]
+/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/site-packages/torch/_tensor.py:1064: ComplexWarning: Casting complex values to real discards the imaginary part
+  return self.numpy().astype(dtype, copy=False)
+  2%|██▎                                                                                                          | 4/192 [00:00<00:19,  9.61it/s]
+Best validation loss: 1.5205424179633458
+Saving best model for epoch: 1
+--------------------------------------------------
+Train Loss: 2.081326e+00
+Val Loss: 1.5205e+00
+Test Loss: 2.0399e+00
+Train Realtive L2  Error: 2.0813e+00
+Val Realtive L2  Error: 1.5205e+00
+Test Realtive L2  Error: 2.0399e+00
+Learning rate: 1.0000e-04
+Epoch 2 of 6000
+number of trainable parameters: 551162
+
+
+

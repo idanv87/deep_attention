@@ -1,0 +1,130 @@
+2024-06-11 17:13:16,551 INFO    StreamThr :5439 [internal.py:wandb_internal():85] W&B internal server running at pid: 5439, started at: 2024-06-11 17:13:16.550774
+2024-06-11 17:13:16,553 DEBUG   HandlerThread:5439 [handler.py:handle_request():158] handle_request: status
+2024-06-11 17:13:16,554 INFO    WriterThread:5439 [datastore.py:open_for_write():87] open: /Users/idanversano/Documents/project_geo_deeponet/deep_attention/src/wandb/run-20240611_171316-8fdlc1eo/run-8fdlc1eo.wandb
+2024-06-11 17:13:16,555 DEBUG   SenderThread:5439 [sender.py:send():379] send: header
+2024-06-11 17:13:16,578 DEBUG   SenderThread:5439 [sender.py:send():379] send: run
+2024-06-11 17:13:17,161 INFO    SenderThread:5439 [dir_watcher.py:__init__():211] watching files in: /Users/idanversano/Documents/project_geo_deeponet/deep_attention/src/wandb/run-20240611_171316-8fdlc1eo/files
+2024-06-11 17:13:17,161 INFO    SenderThread:5439 [sender.py:_start_run_threads():1188] run started: 8fdlc1eo with start time 1718115196.551382
+2024-06-11 17:13:17,173 DEBUG   HandlerThread:5439 [handler.py:handle_request():158] handle_request: check_version
+2024-06-11 17:13:17,173 DEBUG   SenderThread:5439 [sender.py:send_request():406] send_request: check_version
+2024-06-11 17:13:17,477 DEBUG   HandlerThread:5439 [handler.py:handle_request():158] handle_request: run_start
+2024-06-11 17:13:17,477 DEBUG   HandlerThread:5439 [system_info.py:__init__():26] System info init
+2024-06-11 17:13:17,478 DEBUG   HandlerThread:5439 [system_info.py:__init__():41] System info init done
+2024-06-11 17:13:17,478 INFO    HandlerThread:5439 [system_monitor.py:start():194] Starting system monitor
+2024-06-11 17:13:17,478 INFO    SystemMonitor:5439 [system_monitor.py:_start():158] Starting system asset monitoring threads
+2024-06-11 17:13:17,478 INFO    HandlerThread:5439 [system_monitor.py:probe():214] Collecting system info
+2024-06-11 17:13:17,479 INFO    SystemMonitor:5439 [interfaces.py:start():188] Started cpu monitoring
+2024-06-11 17:13:17,479 INFO    SystemMonitor:5439 [interfaces.py:start():188] Started disk monitoring
+2024-06-11 17:13:17,484 INFO    SystemMonitor:5439 [interfaces.py:start():188] Started gpuapple monitoring
+2024-06-11 17:13:17,485 INFO    SystemMonitor:5439 [interfaces.py:start():188] Started memory monitoring
+2024-06-11 17:13:17,485 INFO    SystemMonitor:5439 [interfaces.py:start():188] Started network monitoring
+2024-06-11 17:13:17,732 ERROR   gpuapple  :5439 [gpu_apple.py:sample():110] GPU stats error: Command '['/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/site-packages/wandb/bin/apple_gpu_stats', '--json']' died with <Signals.SIGTRAP: 5>.
+Traceback (most recent call last):
+  File "/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/site-packages/wandb/sdk/internal/system/assets/gpu_apple.py", line 64, in sample
+    subprocess.check_output(command, universal_newlines=True)
+  File "/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/subprocess.py", line 415, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+  File "/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/subprocess.py", line 516, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/site-packages/wandb/bin/apple_gpu_stats', '--json']' died with <Signals.SIGTRAP: 5>.
+2024-06-11 17:13:17,808 ERROR   HandlerThread:5439 [gpu_apple.py:probe():176] GPU stats error: Command '['/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/site-packages/wandb/bin/apple_gpu_stats', '--json']' died with <Signals.SIGTRAP: 5>.
+Traceback (most recent call last):
+  File "/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/site-packages/wandb/sdk/internal/system/assets/gpu_apple.py", line 164, in probe
+    subprocess.check_output(command, universal_newlines=True)
+  File "/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/subprocess.py", line 415, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+  File "/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/subprocess.py", line 516, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/site-packages/wandb/bin/apple_gpu_stats', '--json']' died with <Signals.SIGTRAP: 5>.
+2024-06-11 17:13:17,808 DEBUG   HandlerThread:5439 [system_info.py:probe():152] Probing system
+2024-06-11 17:13:17,811 DEBUG   HandlerThread:5439 [system_info.py:_probe_git():137] Probing git
+2024-06-11 17:13:17,826 DEBUG   HandlerThread:5439 [system_info.py:_probe_git():145] Probing git done
+2024-06-11 17:13:17,827 DEBUG   HandlerThread:5439 [system_info.py:probe():200] Probing system done
+2024-06-11 17:13:17,827 DEBUG   HandlerThread:5439 [system_monitor.py:probe():223] {'os': 'macOS-14.5-arm64-arm-64bit', 'python': '3.8.18', 'heartbeatAt': '2024-06-11T14:13:17.808848', 'startedAt': '2024-06-11T14:13:16.544307', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': '/Users/idanversano/Documents/project_geo_deeponet/deep_attention/src/two_d_train.py', 'codePathLocal': 'two_d_train.py', 'codePath': 'two_d_train.py', 'git': {'remote': 'https://github.com/idanv87/deep_attention.git', 'commit': 'e3b3697480a1493a659984e94421b289ae11005e'}, 'email': 'idanv@campus.technion.ac.il', 'root': '/Users/idanversano/Documents/project_geo_deeponet/deep_attention/src', 'host': 'idans-MacBook-Air.local', 'username': 'idanversano', 'executable': '/Users/idanversano/miniforge3/envs/torch_env/bin/python', 'cpu_count': 8, 'cpu_count_logical': 8, 'cpu_freq': {'current': 3204, 'min': 600, 'max': 3204}, 'cpu_freq_per_core': [{'current': 3204, 'min': 600, 'max': 3204}], 'disk': {'/': {'total': 228.27386474609375, 'used': 9.562911987304688}}, 'gpuapple': {'type': 'arm', 'vendor': 'Apple'}, 'memory': {'total': 8.0}}
+2024-06-11 17:13:17,827 INFO    HandlerThread:5439 [system_monitor.py:probe():224] Finished collecting system info
+2024-06-11 17:13:17,827 INFO    HandlerThread:5439 [system_monitor.py:probe():227] Publishing system info
+2024-06-11 17:13:17,827 DEBUG   HandlerThread:5439 [system_info.py:_save_conda():209] Saving list of conda packages installed into the current environment
+2024-06-11 17:13:17,831 ERROR   HandlerThread:5439 [system_info.py:_save_conda():223] Error saving conda packages: [Errno 2] No such file or directory: 'conda'
+Traceback (most recent call last):
+  File "/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/site-packages/wandb/sdk/internal/system/system_info.py", line 216, in _save_conda
+    subprocess.call(
+  File "/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/subprocess.py", line 340, in call
+    with Popen(*popenargs, **kwargs) as p:
+  File "/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/subprocess.py", line 858, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/subprocess.py", line 1720, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'conda'
+2024-06-11 17:13:17,832 DEBUG   HandlerThread:5439 [system_info.py:_save_conda():224] Saving conda packages done
+2024-06-11 17:13:17,832 INFO    HandlerThread:5439 [system_monitor.py:probe():229] Finished publishing system info
+2024-06-11 17:13:17,836 DEBUG   SenderThread:5439 [sender.py:send():379] send: files
+2024-06-11 17:13:17,836 INFO    SenderThread:5439 [sender.py:_save_file():1454] saving file wandb-metadata.json with policy now
+2024-06-11 17:13:17,925 DEBUG   HandlerThread:5439 [handler.py:handle_request():158] handle_request: python_packages
+2024-06-11 17:13:17,925 DEBUG   SenderThread:5439 [sender.py:send_request():406] send_request: python_packages
+2024-06-11 17:13:17,925 DEBUG   HandlerThread:5439 [handler.py:handle_request():158] handle_request: stop_status
+2024-06-11 17:13:17,925 DEBUG   SenderThread:5439 [sender.py:send_request():406] send_request: stop_status
+2024-06-11 17:13:17,926 DEBUG   HandlerThread:5439 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-11 17:13:18,165 INFO    Thread-12 :5439 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/idanversano/Documents/project_geo_deeponet/deep_attention/src/wandb/run-20240611_171316-8fdlc1eo/files/conda-environment.yaml
+2024-06-11 17:13:18,165 INFO    Thread-12 :5439 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/idanversano/Documents/project_geo_deeponet/deep_attention/src/wandb/run-20240611_171316-8fdlc1eo/files/requirements.txt
+2024-06-11 17:13:18,165 INFO    Thread-12 :5439 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/idanversano/Documents/project_geo_deeponet/deep_attention/src/wandb/run-20240611_171316-8fdlc1eo/files/wandb-metadata.json
+2024-06-11 17:13:18,178 DEBUG   SenderThread:5439 [sender.py:send():379] send: telemetry
+2024-06-11 17:13:18,689 INFO    wandb-upload_0:5439 [upload_job.py:push():130] Uploaded file /var/folders/tf/xl2_rn496w36wzs_pk18q7vr0000gn/T/tmpibcy715dwandb/b7cjtcfp-wandb-metadata.json
+2024-06-11 17:13:18,930 DEBUG   HandlerThread:5439 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-11 17:13:19,169 INFO    Thread-12 :5439 [dir_watcher.py:_on_file_created():271] file/dir created: /Users/idanversano/Documents/project_geo_deeponet/deep_attention/src/wandb/run-20240611_171316-8fdlc1eo/files/output.log
+2024-06-11 17:13:19,851 ERROR   gpuapple  :5439 [gpu_apple.py:sample():110] GPU stats error: Command '['/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/site-packages/wandb/bin/apple_gpu_stats', '--json']' died with <Signals.SIGTRAP: 5>.
+Traceback (most recent call last):
+  File "/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/site-packages/wandb/sdk/internal/system/assets/gpu_apple.py", line 64, in sample
+    subprocess.check_output(command, universal_newlines=True)
+  File "/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/subprocess.py", line 415, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+  File "/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/subprocess.py", line 516, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/site-packages/wandb/bin/apple_gpu_stats', '--json']' died with <Signals.SIGTRAP: 5>.
+2024-06-11 17:13:19,932 DEBUG   HandlerThread:5439 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-11 17:13:20,937 DEBUG   HandlerThread:5439 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-11 17:13:21,177 INFO    Thread-12 :5439 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/idanversano/Documents/project_geo_deeponet/deep_attention/src/wandb/run-20240611_171316-8fdlc1eo/files/output.log
+2024-06-11 17:13:21,584 DEBUG   HandlerThread:5439 [handler.py:handle_request():158] handle_request: status_report
+2024-06-11 17:13:21,942 DEBUG   HandlerThread:5439 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-11 17:13:22,007 ERROR   gpuapple  :5439 [gpu_apple.py:sample():110] GPU stats error: Command '['/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/site-packages/wandb/bin/apple_gpu_stats', '--json']' died with <Signals.SIGTRAP: 5>.
+Traceback (most recent call last):
+  File "/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/site-packages/wandb/sdk/internal/system/assets/gpu_apple.py", line 64, in sample
+    subprocess.check_output(command, universal_newlines=True)
+  File "/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/subprocess.py", line 415, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+  File "/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/subprocess.py", line 516, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/site-packages/wandb/bin/apple_gpu_stats', '--json']' died with <Signals.SIGTRAP: 5>.
+2024-06-11 17:13:22,944 DEBUG   HandlerThread:5439 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-11 17:13:23,188 INFO    Thread-12 :5439 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/idanversano/Documents/project_geo_deeponet/deep_attention/src/wandb/run-20240611_171316-8fdlc1eo/files/output.log
+2024-06-11 17:13:23,949 DEBUG   HandlerThread:5439 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-11 17:13:24,135 ERROR   gpuapple  :5439 [gpu_apple.py:sample():110] GPU stats error: Command '['/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/site-packages/wandb/bin/apple_gpu_stats', '--json']' died with <Signals.SIGTRAP: 5>.
+Traceback (most recent call last):
+  File "/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/site-packages/wandb/sdk/internal/system/assets/gpu_apple.py", line 64, in sample
+    subprocess.check_output(command, universal_newlines=True)
+  File "/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/subprocess.py", line 415, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+  File "/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/subprocess.py", line 516, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/site-packages/wandb/bin/apple_gpu_stats', '--json']' died with <Signals.SIGTRAP: 5>.
+2024-06-11 17:13:24,190 INFO    Thread-12 :5439 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/idanversano/Documents/project_geo_deeponet/deep_attention/src/wandb/run-20240611_171316-8fdlc1eo/files/output.log
+2024-06-11 17:13:24,954 DEBUG   HandlerThread:5439 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-11 17:13:25,959 DEBUG   HandlerThread:5439 [handler.py:handle_request():158] handle_request: internal_messages
+2024-06-11 17:13:26,197 INFO    Thread-12 :5439 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/idanversano/Documents/project_geo_deeponet/deep_attention/src/wandb/run-20240611_171316-8fdlc1eo/files/output.log
+2024-06-11 17:13:26,283 ERROR   gpuapple  :5439 [gpu_apple.py:sample():110] GPU stats error: Command '['/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/site-packages/wandb/bin/apple_gpu_stats', '--json']' died with <Signals.SIGTRAP: 5>.
+Traceback (most recent call last):
+  File "/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/site-packages/wandb/sdk/internal/system/assets/gpu_apple.py", line 64, in sample
+    subprocess.check_output(command, universal_newlines=True)
+  File "/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/subprocess.py", line 415, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+  File "/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/subprocess.py", line 516, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/Users/idanversano/miniforge3/envs/torch_env/lib/python3.8/site-packages/wandb/bin/apple_gpu_stats', '--json']' died with <Signals.SIGTRAP: 5>.
+2024-06-11 17:13:26,668 DEBUG   HandlerThread:5439 [handler.py:handle_request():158] handle_request: status_report
+2024-06-11 17:13:27,501 INFO    cpu       :5439 [interfaces.py:monitor():138] Process cpu has exited.
+2024-06-11 17:13:27,502 DEBUG   SystemMonitor:5439 [system_monitor.py:_start():172] Starting system metrics aggregation loop
+2024-06-11 17:13:27,503 DEBUG   SystemMonitor:5439 [system_monitor.py:_start():179] Finished system metrics aggregation loop
+2024-06-11 17:13:27,503 DEBUG   SystemMonitor:5439 [system_monitor.py:_start():183] Publishing last batch of metrics
+2024-06-11 17:13:27,505 DEBUG   SenderThread:5439 [sender.py:send():379] send: telemetry
+2024-06-11 17:13:27,506 DEBUG   SenderThread:5439 [sender.py:send():379] send: stats
+2024-06-11 17:13:28,208 INFO    Thread-12 :5439 [dir_watcher.py:_on_file_modified():288] file/dir modified: /Users/idanversano/Documents/project_geo_deeponet/deep_attention/src/wandb/run-20240611_171316-8fdlc1eo/files/output.log
+2024-06-11 17:13:29,527 INFO    MainThread:5439 [internal.py:handle_exit():75] Internal process exited
